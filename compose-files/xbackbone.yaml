@@ -1,0 +1,15 @@
+version: "2.1"
+services:
+  xbackbone:
+    image: lscr.io/linuxserver/xbackbone:latest
+    container_name: xbackbone
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - /portainer/Files/AppData/Config/xbackbone/config:/config
+    ports:
+      - 1080:80
+      - 10443:443
+    restart: unless-stopped
