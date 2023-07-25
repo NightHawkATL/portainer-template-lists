@@ -1,0 +1,126 @@
+version: "3.4"
+services:
+  # tv series management
+  sonarr:
+    container_name: sonarr
+    image: ghcr.io/linuxserver/sonarr:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /portainer/Files/AppData/Config/sonarr:/config
+      - /portainer/Files/media/tvshows:/tv
+      - /portainer/Files/downloads:/downloads
+#      - ${ROOT}/media/anime:/anime
+    ports:
+      - 8989:8989
+    labels:
+      - "diun.enable=true"
+
+  # movie management      
+  radarr:
+    container_name: radarr
+    image: ghcr.io/linuxserver/radarr:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /portainer/Files/AppData/Config/radarr:/config
+      - /portainer/Files/media/movies:/movies
+      - /portainer/Files/downloads:/downloads
+    ports:
+      - 7878:7878
+    labels:
+      - "diun.enable=true"
+
+  # subtitle management      
+  bazarr:
+    container_name: bazarr
+    image: ghcr.io/linuxserver/bazarr:latest
+    restart: unless-stopped
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - /portainer/Files/AppData/Config//bazarr:/config
+      - /portainer/Files/media/movies:/movies
+      - /portainer/Files/media/tvshows:/tv
+    ports:
+      - 6767:6767
+    labels:
+      - "diun.enable=true"
+
+  # music mgmt   
+  lidarr:
+    image: lscr.io/linuxserver/lidarr
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /portainer/Files/AppData/Config/lidarr:/config
+      - /portainer/Files/media/music:/music
+      - /portainer/Files/downloads:/downloads
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+    labels:
+      - "diun.enable=true"
+      
+ #Request service
+  overseerr:
+    image: sctx/overseerr:latest
+    container_name: overseerr
+    environment:
+      - LOG_LEVEL=info
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    ports:
+      - 5055:5055
+    volumes:
+      - /portainer/Files/AppData/Config/overseer:/config
+    restart: unless-stopped
+    labels:
+      - "diun.enable=true"
+
+  # indexer mgmt    
+  prowlarr:
+    image: ghcr.io/linuxserver/prowlarr:develop
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - /portainer/Files/AppData/Config/prowlarr:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+    labels:
+      - "diun.enable=true"
+
+  readarr:
+    image: lscr.io/linuxserver/readarr:nightly
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - /portainer/Files/AppData/Config/readarr:/config
+      - /portainer/Files/media/Books:/books
+      - /portainer/Files/downloads:/downloads
+    ports:
+      - 8787:8787
+    restart: unless-stopped
