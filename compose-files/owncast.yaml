@@ -1,0 +1,13 @@
+version: "3.4"
+services:
+  owncast:
+    image: gabekangas/owncast #ghcr.io/owncast/owncast:nightly
+    container_name: "owncast"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "12080:8080"
+      - "1935:1935"
+    volumes:
+      - "/portainer/Files/AppData/Config/owncast/data:/app/data"
