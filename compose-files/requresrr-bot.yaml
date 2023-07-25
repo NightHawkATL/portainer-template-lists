@@ -1,0 +1,14 @@
+version: "2.1"
+services:
+  requestrr:
+    image: lscr.io/linuxserver/requestrr:latest
+    container_name: requestrr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - /portainer/Files/AppData/Config/requesterr:/config
+    ports:
+      - 4545:4545
+    restart: unless-stopped
