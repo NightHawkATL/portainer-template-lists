@@ -1,0 +1,15 @@
+version: '2.4'
+
+services:
+  posterr:
+    image: petersem/posterr
+    container_name: posterr
+    environment:
+      TZ: America/New_York
+      BASEPATH: ""
+    volumes:
+      - /portainer/Files/AppData/Config/posterr/config:/usr/src/app/config
+      - /portainer/Files/AppData/Config/posterr/custom:/usr/src/app/public/custom
+    ports:
+      - 9876:3000
+    restart: unless-stopped
