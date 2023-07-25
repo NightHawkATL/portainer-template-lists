@@ -1,0 +1,15 @@
+version: '3.3'
+services:
+  truecommand:
+    image: ixsystems/truecommand:latest
+    container_name: truecommand
+    ports:
+      - 3085:80
+      - 35443:443
+    restart: unless-stopped
+    volumes:
+        - /portainer/Files/AppData/Config/truecommand/data:/data
+    environment:
+        - TZ=America/new_york
+    labels:
+      - diun.enable=true
