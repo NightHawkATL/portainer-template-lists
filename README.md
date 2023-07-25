@@ -25,3 +25,5 @@ MycroftWilde: https://raw.githubusercontent.com/mycroftwilde/portainer_templates
 MikeStraney: https://raw.githubusercontent.com/mikestraney/portainer-templates/master/templates.json
 
 NTV-One: https://raw.githubusercontent.com/ntv-one/portainer/main/template.json
+
+Don't forget to check out the compose files I share here: https://github.com/NightHawkATL/portainer-template-lists/tree/main/compose-files
