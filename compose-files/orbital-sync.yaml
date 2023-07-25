@@ -1,0 +1,25 @@
+version: '3'
+services:
+  orbital-sync:
+    container_name: orbital-sync
+    image: mattwebbio/orbital-sync:1
+    environment:
+      PRIMARY_HOST_BASE_URL: 'http://10.0.1.100'
+      PRIMARY_HOST_PASSWORD: '<password>'
+      SECONDARY_HOST_1_BASE_URL: 'http://10.0.1.101'
+      SECONDARY_HOST_1_PASSWORD: '<password>'
+#      SECONDARY_HOST_2_BASE_URL: 'http://10.0.1.102'
+#      SECONDARY_HOST_2_PASSWORD: '<password>'
+#      SECONDARY_HOST_3_BASE_URL: 'http://10.0.1.103'
+#      SECONDARY_HOST_3_PASSWORD: '<password>'
+      INTERVAL_MINUTES: 720
+      UPDATE_GRAVITY: true
+      SYNC_WHITELIST: true
+      SYNC_REGEX_WHITELIST: true
+      SYNC_BLACKLIST: true
+      SYNC_REGEXLIST: true
+      SYNC_ADLIST: true
+      SYNC_CLIENT: true
+      SYNC_GROUP: true
+      TZ: America/New_York
+    restart: unless-stopped
