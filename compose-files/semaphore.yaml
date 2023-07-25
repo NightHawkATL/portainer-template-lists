@@ -1,0 +1,41 @@
+version: "3.0"
+services:
+  mysql:
+    image: mysql:8.0
+    hostname: mysql
+    volumes:
+      - /portainer/Files/AppData/Config/semaphore/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=semaphore
+      - MYSQL_USER=semaphore
+      - MYSQL_PASSWORD="${DB_PASS}"
+    restart: unless-stopped
+    
+  semaphore:
+    container_name: ansiblesemaphore
+    image: semaphoreui/semaphore:v2.8.90
+    user: "${UID}:${GID}"
+    ports:
+      - 3000:3000
+    environment:
+      - SEMAPHORE_DB_USER=semaphore
+      - SEMAPHORE_DB_PASS="${DB_PASS}"
+      - SEMAPHORE_DB_HOST=mysql
+      - SEMAPHORE_DB_PORT=3306
+      - SEMAPHORE_DB_DIALECT=mysql
+      - SEMAPHORE_DB=semaphore
+      - SEMAPHORE_PLAYBOOK_PATH=/tmp/semaphore/
+      - SEMAPHORE_ADMIN_PASSWORD="${ADMIN_PASSWORD}"
+      - SEMAPHORE_ADMIN_NAME=admin
+      - SEMAPHORE_ADMIN_EMAIL="${ADMIN_EMAIL}"
+      - SEMAPHORE_ADMIN=admin
+      - SEMAPHORE_ACCESS_KEY_ENCRYPTION="${ENCRYPTION_KEY}"
+      - ANSIBLE_HOST_KEY_CHECKING=false  # (optional) change to true if you want to enable host key checking
+    volumes:
+      - /portainer/Files/AppData/Config/semaphore/inventory/:/inventory:ro
+      - /portainer/Files/AppData/Config/semaphore/authorized-keys/:/authorized-keys:ro
+      - /portainer/Files/AppData/Config/semaphore/config/:/etc/semaphore:rw
+    restart: unless-stopped
+    depends_on:
+      - mysql
