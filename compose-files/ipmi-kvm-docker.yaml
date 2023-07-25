@@ -1,0 +1,15 @@
+version: "3.0"
+services:
+  ipmi_docker:
+    container_name: ipmi-kvm-docker
+    image: solarkennedy/ipmi-kvm-docker
+    hostname: ipmi-docker
+    ports:
+      - 8585:8080
+    volumes:
+      - /portainer/Files/AppData/Config/ipmi_docker:/root/images
+    environment:
+        - TZ=America/new_york
+    labels:
+      - diun.enable=true
+    restart: unless-stopped
