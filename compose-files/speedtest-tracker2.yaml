@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+    speedtest-tracker:
+      image: 'ghcr.io/alexjustesen/speedtest-tracker:latest'
+      container_name: speedtest-tracker-2
+      ports:
+          - '8087:80'
+          - '8448:443'
+      environment:
+          - PUID=1000
+          - PGID=1000
+      volumes:
+          - '/portainer/Files/AppData/Config/st2/config:/config'
+      restart: unless-stopped
