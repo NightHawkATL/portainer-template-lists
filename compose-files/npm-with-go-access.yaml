@@ -1,0 +1,46 @@
+version: "3"
+services:
+  npm:
+    image: 'jc21/nginx-proxy-manager:2.9.18'
+    restart: unless-stopped
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - '4080:80' # Public HTTP Port
+      - '40443:443' # Public HTTPS Port
+      - '4081:81' # Admin Web Port
+      # Add any other Stream port you want to expose
+      # - '21:21' # FTP
+    environment:
+      DB_MYSQL_HOST: "db-npm"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "npm"
+      DB_MYSQL_PASSWORD: "<password>"
+      DB_MYSQL_NAME: "npm"
+      DISABLE_IPV6: 'true' # Uncomment this if IPv6 is not enabled on your host
+    volumes:
+      - /portainer/Files/AppData/Config/npm/data:/data
+      - /portainer/Files/AppData/Config/npm/letsencrypt:/etc/letsencrypt
+    depends_on:
+      - db-npm
+
+  db-npm:
+    image: 'jc21/mariadb-aria:latest'
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 'npm'
+      MYSQL_DATABASE: 'npm'
+      MYSQL_USER: 'npm'
+      MYSQL_PASSWORD: '<password>'
+    volumes:
+      - /portainer/Files/AppData/Config/npm/data/mysql:/var/lib/mysql
+
+  goaccess:
+    image: 'xavierh/goaccess-for-nginxproxymanager:latest'
+    container_name: goaccess
+    restart: always
+    environment:
+        - TZ=America/New_York
+    ports:
+        - '7880:7880'
+    volumes:
+        - /portainer/Files/AppData/Config/npm/data/logs:/opt/log
