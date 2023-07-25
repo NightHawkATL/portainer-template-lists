@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+  organizr:
+    image: organizr/organizr
+    container_name: organizr
+    volumes:
+    - /portainer/Files/AppData/Config/organizr:/config
+    environment:
+    - PGID=1000
+    - PUID=1000
+    - fpm=false
+    - branch=v2-master
+    ports:
+    - 3080:80
