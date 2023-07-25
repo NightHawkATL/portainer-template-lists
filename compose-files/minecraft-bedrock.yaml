@@ -1,0 +1,19 @@
+version: '3.4'
+services:
+  minecraft:
+    image: itzg/minecraft-bedrock-server
+    container_name: minecraft-bedrock
+    environment:
+      EULA: "TRUE"
+      GAMEMODE: creative
+      DIFFICULTY: normal
+      VERSION: LATEST
+      # ALLOW_LIST: true
+      LEVEL_SEED: minecraft
+      LEVEL_NAME: My Minecraft
+    ports:
+      - 19132:19132/udp
+    volumes:
+      - /portainer/Files/AppData/Config/minecraft_br/data:/data
+    stdin_open: true
+    tty: true
