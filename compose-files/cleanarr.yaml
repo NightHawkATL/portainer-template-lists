@@ -1,0 +1,16 @@
+version: '3'
+services:
+  cleanarr:
+    image: selexin/cleanarr:latest
+    container_name: cleanarr
+    hostname: cleanarr
+    ports:
+      - "5080:80"
+    environment:
+      - BYPASS_SSL_VERIFY=1
+      - PLEX_TOKEN=<plex-token-goes-here>
+      - PLEX_BASE_URL=<plex-url-goes-here>
+      - LIBRARY_NAMES=Movies;TV Shows
+    volumes:
+      - /portainer/Files/AppData/Config/cleanarr:/config
+    restart: unless-stopped
