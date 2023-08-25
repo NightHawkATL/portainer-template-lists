@@ -1,6 +1,6 @@
 # portainer-template-lists
 
-This is a list of all of the portainer template lists that I have found over time that I have used at one point in time for adding apps and containers to my HomeLab. THey are in no particular order.
+This is a list of all of the portainer template lists that I have found over time that I have used at one point in time for adding apps and containers to my HomeLab. They are in no particular order.
 
 All you have to do is copy the URL and add it to the "App Teplates" URL in settings of portainer.
 
