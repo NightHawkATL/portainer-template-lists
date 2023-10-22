@@ -1,48 +1,64 @@
-version: "3.8"
-services:
-  resume_app:
-    image: martadinata666/reactive-resume:latest
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/New_York
-      - SECRET_KEY=${SECRET_KEY}
-      - POSTGRES_HOST=resume_db
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
-      - POSTGRES_DB=reactiveresume
-      - PUBLIC_FLAG_DISABLE_SIGNUPS=false
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_EXPIRY_TIME=604800
-      - STORAGE_S3_ENABLED=false
-    ports:
-      - 7680:80
-      - 3000:3000
-    networks:
-      - reactiveresume
-    volumes:
-# Make sure to change the path to the left of the colon to match your folder structure.
-      - /portainer/Files/AppData/Config/react-resume/assets:/home/debian/reactiveresume/server/dist/assets #photo and export storage
-    restart: unless-stopped
+version: '3.8'
 
-  resume_db:
-    image: postgres:13
-    environment:
-      - PUID=1000
-      - PGID=1000
-#      - POSTGRES_SSL_CERT=
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
-      - POSTGRES_DB=reactiveresume
-    restart: unless-stopped
-    volumes:
-      - /portainer/Files/AppData/Config/react-resume/db:/var/lib/postgresql/data
+services:
+  postgres:
+    image: postgres:alpine
+    restart: always
     ports:
       - 5432:5432
-    networks:
-      - reactiveresume
+    volumes:
+      - /portainer/Files/AppData/Config/react-resume/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=reactiveresume
+      - POSTGRES_USER=reactiveresume
+      - POSTGRES_PASSWORD=${DB_PASS}
 
-networks:
-  reactiveresume:
-    name: reactiveresume
+  server:
+    image: amruthpillai/reactive-resume:server-latest
+    restart: always
+    ports:
+      - 3100:3100
+    depends_on:
+      - postgres
+    environment:
+      - PUBLIC_URL=http://{IP:3000}
+      - PUBLIC_SERVER_URL=http://{IP:3100}
+#      - PUBLIC_GOOGLE_CLIENT_ID=
+      - POSTGRES_DB=reactiveresume
+      - POSTGRES_USER=reactiveresume
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - SECRET_KEY=${SECRET_KEY}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+#      - POSTGRES_SSL_CERT=
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRY_TIME=604800
+#      - GOOGLE_CLIENT_SECRET=
+#      - GOOGLE_API_KEY=
+      - MAIL_FROM_NAME=Reactive Resume
+      - MAIL_FROM_EMAIL=
+      - MAIL_HOST=
+      - MAIL_PORT=
+      - MAIL_USERNAME=
+      - MAIL_PASSWORD=
+#      - STORAGE_BUCKET=
+#      - STORAGE_REGION=
+#      - STORAGE_ENDPOINT=
+#      - STORAGE_URL_PREFIX=
+#      - STORAGE_ACCESS_KEY=
+#      - STORAGE_SECRET_KEY=
+#      - PDF_DELETION_TIME=
+    volumes:
+      - /portainer/Files/AppData/Config/react-resume/assets:/home/debian/reactiveresume/server/dist/assets #photo and export storage
+
+  client:
+    image: amruthpillai/reactive-resume:client-latest
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - server
+    environment:
+      - PUBLIC_URL=http://{IP:3000}
+      - PUBLIC_SERVER_URL=http://{IP:3100}
+#      - PUBLIC_GOOGLE_CLIENT_ID=
