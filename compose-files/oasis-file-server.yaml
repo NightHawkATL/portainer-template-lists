@@ -1,0 +1,10 @@
+version: '3.3'
+services:
+  oasis:
+    container_name: oasis
+    image: machengim/oasis
+    volumes:
+    - '/portainer/Files/AppData/Config/oasis/data:/opt/oasis/data'
+    - '/portainer/Files/AppData/Config/oasis/storage:/home/storage'
+    ports:
+    - '8015:8000'
