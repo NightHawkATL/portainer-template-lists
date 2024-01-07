@@ -1,0 +1,47 @@
+version: "3.5"
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD={DB_PASSWORD}
+    volumes:
+      - /portainer/Files/AppData/Config/linkwarden/pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+      
+  linkwarden:
+    image: ghcr.io/linkwarden/linkwarden:latest
+    environment:
+      - DATABASE_URL=postgresql://postgres:{DB_PASSWORD}@postgres:5432/postgres
+      - NEXTAUTH_SECRET={NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=http://localhost:3000
+      # Additional Optional Settings
+#      - PAGINATION_TAKE_COUNT=
+#      - STORAGE_FOLDER=
+#      - AUTOSCROLL_TIMEOUT=
+#      - NEXT_PUBLIC_DISABLE_REGISTRATION=
+      # AWS S3 Settings
+#      - SPACES_KEY=
+#      - SPACES_SECRET=
+#      - SPACES_ENDPOINT=
+#      - SPACES_REGION=
+      # SMTP Settings
+#      - NEXT_PUBLIC_EMAIL_PROVIDER=
+#      - EMAIL_FROM=
+#      - EMAIL_SERVER=
+      # Stripe settings (You don't need these, it's for the cloud instance payments)
+#      - NEXT_PUBLIC_STRIPE_IS_ACTIVE=
+#      - STRIPE_SECRET_KEY=
+#      - MONTHLY_PRICE_ID=
+#      - YEARLY_PRICE_ID=
+#      - NEXT_PUBLIC_TRIAL_PERIOD_DAYS=
+#      - NEXT_PUBLIC_STRIPE_BILLING_PORTAL_URL=
+      - BASE_URL=http://localhost:3000
+      # Docker postgres settings
+      - POSTGRES_PASSWORD={DB_PASSWORD}
+    ports:
+      - 3011:3000
+    volumes:
+      - /portainer/Files/AppData/Config/linkwarden/data:/data/data
+    restart: unless-stopped
+    depends_on:
+      - postgres
