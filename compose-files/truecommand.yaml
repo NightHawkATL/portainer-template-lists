@@ -9,7 +9,20 @@ services:
     restart: unless-stopped
     volumes:
         - /portainer/Files/AppData/Config/truecommand/data:/data
+        - /backup:/backup
     environment:
         - TZ=America/new_york
-    labels:
-      - diun.enable=true
+
+  restarter: #Will restart the container at 00:00 using a Docker CLI command to have it auto-create a backup of the config for each instance of TrueNAS Core or Scale connected.
+    image: docker:cli
+    restart: unless-stopped
+    volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
+    entrypoint: ["/bin/sh","-c"]
+    command:
+      - |
+        while true; do
+          if [ "$(date +'%H:%M')" = '0:00' ]; then
+            docker restart truecommand
+          fi
+          sleep 60
+        done
