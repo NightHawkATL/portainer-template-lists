@@ -38,7 +38,7 @@ services:
     volumes:
       - /portainer/Files/AppData/Config/semaphore/inventory/:/inventory:ro
       - /portainer/Files/AppData/Config/semaphore/authorized-keys/:/authorized-keys:ro
-      - /portainer/Files/AppData/Config/semaphore/config/:/etc/semaphore:rw
+      - /portainer/Files/AppData/Config/semaphore/config/:/home/semaphore:rw
       - /portainer/Files/AppData/Config/semaphore/.ssh/:/home/semaphore/.ssh:ro
       - /portainer/Files/AppData/Config/semaphore/.ssh/known_hosts:/home/semaphore/known_hosts:rw
       - /etc/timezone:/etc/timezone
