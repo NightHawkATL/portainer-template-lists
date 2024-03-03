@@ -1,0 +1,43 @@
+services: 
+  services:
+  postgres:
+    restart: unless-stopped
+    image: postgres:14
+    hostname: postgres
+    container_name: semaphore_db
+    volumes: 
+      - /portainer/Files/AppData/Config/semaphore/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      
+  semaphore:
+    restart: unless-stopped
+    user: "${PUID}:${PGID}"
+    container_name: semaphore
+    ports:
+      - 3000:3000
+    image: semaphoreui/semaphore:latest
+    environment:
+      SEMAPHORE_DB_USER: ${DB_USER}
+      SEMAPHORE_DB_PASS: ${DB_PASSWORD}
+      SEMAPHORE_DB_HOST: ${DB_HOST:postgres} #  choices are mysql & postgres
+      SEMAPHORE_DB_PORT: ${DB_PORT:5432} # 3306 for mysql, 5432 for postgres
+      SEMAPHORE_DB_DIALECT: ${DB_HOST:postgres} # choices are mysql & postgres
+      SEMAPHORE_DB: ${DB_NAME:semaphore}
+      SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
+      SEMAPHORE_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      SEMAPHORE_ADMIN_NAME: ${ADMIN_NAME} #first/last name or handle, whatever works for you
+      SEMAPHORE_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      SEMAPHORE_ADMIN: ${ADMIN_USERNAME:admin}
+      SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${ACCESS_KEY_ENC} # run "head -c32 /dev/urandom | base64 from CLI of host OS
+
+    volumes:
+      - /portainer/Files/AppData/Config/semaphore/inventory/:/inventory:ro
+      - /portainer/Files/AppData/Config/semaphore/authorized-keys/:/authorized-keys:ro
+      - /portainer/Files/AppData/Config/semaphore/config/:/etc/semaphore:rw
+      - /portainer/Files/AppData/Config/semaphore/.ssh/:/home/semaphore/.ssh:ro
+      - /portainer/Files/AppData/Config/semaphore/.ssh/known_hosts:/home/semaphore/known_hosts:rw
+    depends_on:
+      - ${DB_HOST:postgres} # for postgres, change to: postgres
