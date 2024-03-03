@@ -6,6 +6,8 @@ services:
     container_name: semaphore_db
     volumes:
       - /portainer/Files/AppData/Config/semaphore/mysql:/var/lib/mysql
+      - /etc/timezone:/etc/timezone
+      - /etc/localtime:/etc/localtime
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
       MYSQL_DATABASE: ${DB_NAME}
@@ -39,5 +41,7 @@ services:
       - /portainer/Files/AppData/Config/semaphore/config/:/etc/semaphore:rw
       - /portainer/Files/AppData/Config/semaphore/.ssh/:/home/semaphore/.ssh:ro
       - /portainer/Files/AppData/Config/semaphore/.ssh/known_hosts:/home/semaphore/known_hosts:rw
+      - /etc/timezone:/etc/timezone
+      - /etc/localtime:/etc/localtime
     depends_on:
       - ${DB_HOST} # for postgres, change to: postgres
