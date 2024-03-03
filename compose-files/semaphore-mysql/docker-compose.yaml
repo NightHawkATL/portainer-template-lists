@@ -39,7 +39,7 @@ services:
       - /portainer/Files/AppData/Config/semaphore/inventory/:/inventory:ro
       - /portainer/Files/AppData/Config/semaphore/authorized-keys/:/authorized-keys:ro
       - /portainer/Files/AppData/Config/semaphore/config/:/home/semaphore:rw
-      - /portainer/Files/AppData/Config/semaphore/.ssh/:/home/semaphore/.ssh:ro
+      - /portainer/Files/AppData/Config/semaphore/.ssh/:/home/semaphore/.ssh:rw #needs to "rw" at first but once ssh keys are created, it will need to be set back to "ro".
       - /portainer/Files/AppData/Config/semaphore/.ssh/known_hosts:/home/semaphore/known_hosts:rw
       - /etc/timezone:/etc/timezone
       - /etc/localtime:/etc/localtime
