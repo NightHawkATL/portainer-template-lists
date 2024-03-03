@@ -1,41 +1,45 @@
-version: "3.0"
-services:
+services: 
   mysql:
+    restart: unless-stopped
     image: mysql:8.0
     hostname: mysql
+    container_name: semaphore_db
     volumes:
       - /portainer/Files/AppData/Config/semaphore/mysql:/var/lib/mysql
     environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
-      - MYSQL_DATABASE=semaphore
-      - MYSQL_USER=semaphore
-      - MYSQL_PASSWORD="${DB_PASS}"
-    restart: unless-stopped
-    
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      
   semaphore:
-    container_name: ansiblesemaphore
-    image: semaphoreui/semaphore:v2.8.90
-    user: "${UID}:${GID}"
+    restart: unless-stopped
+    user: "${PUID}:${PGID}"
+    container_name: semaphore
     ports:
       - 3000:3000
+    image: semaphoreui/semaphore:latest
     environment:
-      - SEMAPHORE_DB_USER=semaphore
-      - SEMAPHORE_DB_PASS="${DB_PASS}"
-      - SEMAPHORE_DB_HOST=mysql
-      - SEMAPHORE_DB_PORT=3306
-      - SEMAPHORE_DB_DIALECT=mysql
-      - SEMAPHORE_DB=semaphore
-      - SEMAPHORE_PLAYBOOK_PATH=/tmp/semaphore/
-      - SEMAPHORE_ADMIN_PASSWORD="${ADMIN_PASSWORD}"
-      - SEMAPHORE_ADMIN_NAME=admin
-      - SEMAPHORE_ADMIN_EMAIL="${ADMIN_EMAIL}"
-      - SEMAPHORE_ADMIN=admin
-      - SEMAPHORE_ACCESS_KEY_ENCRYPTION="${ENCRYPTION_KEY}"
-      - ANSIBLE_HOST_KEY_CHECKING=false  # (optional) change to true if you want to enable host key checking
+      SEMAPHORE_DB_USER: ${DB_USER}
+      SEMAPHORE_DB_PASS: ${DB_PASSWORD}
+      SEMAPHORE_DB_HOST: ${DB_HOST:mysql} #  choices are mysql & postgres
+      SEMAPHORE_DB_PORT: ${DB_PORT:3306} # 3306 for mysql, 5432 for postgres
+      SEMAPHORE_DB_DIALECT: ${DB_HOST:mysql} # choices are mysql & postgres
+      SEMAPHORE_DB: ${DB_NAME:semaphore}
+      SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
+      SEMAPHORE_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      SEMAPHORE_ADMIN_NAME: ${ADMIN_NAME} #first/last name or handle, whatever works for you
+      SEMAPHORE_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      SEMAPHORE_ADMIN: ${ADMIN_USERNAME:admin}
+      SEMAPHORE_ACCESS_KEY_ENCRYPTION: ${ACCESS_KEY_ENC} # run "head -c32 /dev/urandom | base64 from CLI of host OS
+
     volumes:
       - /portainer/Files/AppData/Config/semaphore/inventory/:/inventory:ro
       - /portainer/Files/AppData/Config/semaphore/authorized-keys/:/authorized-keys:ro
       - /portainer/Files/AppData/Config/semaphore/config/:/etc/semaphore:rw
-    restart: unless-stopped
+      - /portainer/Files/AppData/Config/semaphore/.ssh/:/home/semaphore/.ssh:ro
+      - /portainer/Files/AppData/Config/semaphore/.ssh/known_hosts:/home/semaphore/known_hosts
     depends_on:
-      - mysql
+      - ${DB_HOST:mysql} # for postgres, change to: postgres
+#volumes:
+#  semaphore-mysql: # to use postgres, switch to: semaphore-postgres
