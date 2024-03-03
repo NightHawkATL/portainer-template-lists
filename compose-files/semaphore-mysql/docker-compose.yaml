@@ -19,7 +19,7 @@ services:
     user: "${PUID}:${PGID}"
     container_name: semaphore
     ports:
-      - 3000:3000
+      - ${CONTAINER_PORT}:3000
     image: semaphoreui/semaphore:latest
     environment:
       SEMAPHORE_DB_USER: ${DB_USER}
