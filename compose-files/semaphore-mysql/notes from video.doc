@@ -1,0 +1,45 @@
+Order of operations:
+1.	Create a folder for semaphore on your docker host.
+2.	Create a file called "authorized-keys" within the semaphore folder.
+3.	Create a folder called ".ssh" (which will be hidden) within the semaphore folder.
+4.	Navigate into the .ssh folder and create a file called "known_hosts".
+5.	Set ownership of the main semaphore folder using "sudo chown -R 1001:1001 semaphore"
+    a.	You must use sudo to set the ownership correctly.
+    b.	Using "-R" sets the ownership recusively for subfolders and files.
+    c.	UID:GID must be 1001:1001 to match the 3rd user created on the host OS for docker. This plays into also being the same for all machines/virtual machines that you want to access with ansible.
+6.	Open your docker compose editor of choice to copy the compose file from my github repo to spin up the stack. This could be Portainer, Dockge, or just docker compose via the CLI.
+7.	Deploy the stack and verify that you get a success message from both the databaser and the semaphore container as shown in the video.
+8.	Go into the semaphore container (exec) and run as the semaphore user with /bin/sh.
+    a.	From the prompt, run "ssh-keygen".
+    b.	Verify the default location is correct.
+    c.	Add a passphrase to the key.
+    d.	Verify that it completes.
+9.	Go back into the compose file/Portainer/Dockge and set the main .ssh folder to "ro".
+10.	Login to the semaphore UI using the username and password that you set as a part of the deployment process.
+11.	Give your project a name and click "create".
+12.	Going almost from the bottom-left to the top is the order we will be working in to set semaphore up for use.
+    a.	Start with the key store and create a blank (empty) key to access the git repo of your choice and save.
+    b.	Go into repositories and add the repository of your choice and set the SSH key to the empty one you created earlier
+    c.	Go back into the key store and add a semaphore SSH user with type "SSH Key" and set the username and passphrase then copy the private SSH key created earlier.
+    d.	Next is the environment. Just create a single entry for whatever name you want to give it and set the environment to "{}" and save.
+    e.	Now we get to add the inventory. I create multiple inventories to act upon difference servers, VM or LXCs with different playbooks. In our example, we just added all of the IPs that we would want access to. Give the inventory a name, set the User credentials to the SSH key we setup earlier and set the type to "Static". Then just add the IPs of the devices you wish to work with.
+13.	Finally, we can create a task template.
+    a.	Give your task a name. It can be anything that helps you identify what it does.
+    b.	You can add a description of the task if you want.
+    c.	Point to the filename of the playbook that you want to run.
+    d.	Choose the correct inventory if you have more than one.
+    e.	Choose the repository you added earlier.
+    f.	Select the environment that you setup.
+    g.	If this task is meant to take the place of running updates, you can choose to set a cron schedule for it.
+    h.	Click create to save it.
+14.	Before we can test the task, we will need to copy the ssh key from semaphore to the host/s you wish to access with semaphore ansible.
+    a.	Access the exec console for the semaphore container and login with the semaphore user using /bin/sh.
+    b.	Run the command "ssh-copy-id semaphore@[IP of device] and press enter.
+    c.	Confirm that you want to send the ssh key by typing yes to the question to confirm.
+    d.	Provide the passphrase for the key that you are sending to the IP.
+    e.	You should get a confirmation that the key has been sent and you can now test by ssh'ing into the device using "ssh semaphore@[IP of device].
+15.	Once you have verified communications, you can exit the ssh session with "exit" and then exit the exec console with "exit" again.
+16.	Going back to the semaphore UI, you can either click into the task or find the "run" button to the right of the task to open the run dialogue.
+    a.	You will want to choose "dry-run" to test that you have communications with the IP that you are working with.
+    b.	Once that is ticked/checked, click the "run" button.
+    c.	A new window will appear that will show you what is going on. It will download the repository to a local folder and run the task (playbook) that you told it to. If you see any errors, they will be in red. Warnings that can be ignored will be in purple but may need to be looked into later. Green text means that it is successful in doing what the playbook is set to do.
