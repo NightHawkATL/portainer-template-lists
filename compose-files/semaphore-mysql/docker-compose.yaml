@@ -28,7 +28,7 @@ services:
       SEMAPHORE_DB_PORT: ${DB_PORT} # 3306 for mysql, 5432 for postgres
       SEMAPHORE_DB_DIALECT: ${DB_HOST} # choices are mysql & postgres
       SEMAPHORE_DB: ${DB_NAME}
-      SEMAPHORE_PLAYBOOK_PATH: /etc/semaphore/common/repositories
+      SEMAPHORE_PLAYBOOK_PATH: /home/semaphore/common/repositories
       SEMAPHORE_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
       SEMAPHORE_ADMIN_NAME: ${ADMIN_NAME} #first/last name or handle, whatever works for you
       SEMAPHORE_ADMIN_EMAIL: ${ADMIN_EMAIL}
@@ -40,9 +40,9 @@ services:
       - /portainer/Files/AppData/Config/semaphore/inventory/:/inventory:ro
       - /portainer/Files/AppData/Config/semaphore/authorized-keys/:/authorized-keys:ro
       - /portainer/Files/AppData/Config/semaphore/config/:/home/semaphore:rw
-      - /portainer/Files/AppData/Config/semaphore/.ssh/:/home/semaphore/.ssh:rw #needs to "rw" at first but once ssh keys are created, it will need to be set back to "ro".
+      - /portainer/Files/AppData/Config/semaphore/.ssh/:/home/semaphore/.ssh:ro
       - /portainer/Files/AppData/Config/semaphore/.ssh/known_hosts:/home/semaphore/known_hosts:rw
-      - /portainer/Files/AppData/Config/semaphore/config/common/:/tmp/semaphore:rw
+      - /portainer/Files/AppData/Config/semaphore/config/common/:/home/semaphore/config/common:rw
       - /etc/timezone:/etc/timezone
       - /etc/localtime:/etc/localtime
     depends_on:
