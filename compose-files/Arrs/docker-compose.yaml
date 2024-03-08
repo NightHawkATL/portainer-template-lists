@@ -1,126 +1,174 @@
-version: "3.4"
+# this is all configured with TRaSH Guides in mind. Please visit https://trash-guides.info/ for explinations on folder structure and configurations.
+## You will either need to create a .env file to manage the variables provided ("${VAR}") or add them as a part of a stack in Portainer.
+### The ("${NET_SHARE}") variable is best used by creating a mapped folder in the host OS user folder (/home/[user]/shares) and setup with "/etc/fstab" to connect at boot.
+### This will make sure that you have the correct permissions to access the shared folder as long as the permissions are matched on the share server (ex. TrueNAS or OMV) and can be SMB or NFS.
 services:
   # tv series management
   sonarr:
-    container_name: sonarr
     image: ghcr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+   #  network_mode: service:gluetun #not really needed but it's here in case you feel you need extra security
     restart: unless-stopped
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/New_York
+      - PUID=${PUID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - PGID=${PGID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - TZ=${TZ} # typical representation of time zone (America/New_York) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
     volumes:
+      - ${STORAGE_FOLDER_LOCATION}/sonarr:/config # example location would be "/home/[user]/docker (no trailing slash)
       - /etc/localtime:/etc/localtime:ro
-      - /portainer/Files/AppData/Config/sonarr:/config
-      - /portainer/Files/media/tvshows:/tv
-      - /portainer/Files/downloads:/downloads
-#      - ${ROOT}/media/anime:/anime
+      - /etc/timezone:/etc/timezone:ro      
+      - ${NET_SHARE}/tv:/tv
+#      - ${NET_SHARE}/anime:/anime
     ports:
       - 8989:8989
-    labels:
-      - "diun.enable=true"
 
   # movie management      
   radarr:
-    container_name: radarr
     image: ghcr.io/linuxserver/radarr:latest
+    container_name: radarr
+  #  network_mode: service:gluetun #not really needed but it's here in case you feel you need extra security
     restart: unless-stopped
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/New_York
+      - PUID=${PUID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - PGID=${PGID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - TZ=${TZ # typical representation of time zone (America/New_York) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
     volumes:
+      - ${STORAGE_FOLDER_LOCATION}/radarr:/config # example location would be "/home/[user]/docker (no trailing slash)
       - /etc/localtime:/etc/localtime:ro
-      - /portainer/Files/AppData/Config/radarr:/config
-      - /portainer/Files/media/movies:/movies
-      - /portainer/Files/downloads:/downloads
+      - /etc/timezone:/etc/timezone:ro      
+      - ${NET_SHARE}/movies:/movies
     ports:
       - 7878:7878
-    labels:
-      - "diun.enable=true"
 
   # subtitle management      
   bazarr:
     container_name: bazarr
+    #  network_mode: service:gluetun #not really needed but it's here in case you feel you need extra security
     image: ghcr.io/linuxserver/bazarr:latest
     restart: unless-stopped
 
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/New_York
+      - PUID=${PUID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - PGID=${PGID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - TZ=${TZ} # typical representation of time zone (America/New_York) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
     volumes:
-      - /portainer/Files/AppData/Config//bazarr:/config
-      - /portainer/Files/media/movies:/movies
-      - /portainer/Files/media/tvshows:/tv
+      - ${STORAGE_FOLDER_LOCATION}/bazarr:/config # example location would be "/home/[user]/docker (no trailing slash)
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro      
+      - ${NET_SHARE}/tv:/tv
+      - ${NET_SHARE}/movies:/movies
     ports:
       - 6767:6767
-    labels:
-      - "diun.enable=true"
 
   # music mgmt   
   lidarr:
     image: lscr.io/linuxserver/lidarr
     container_name: lidarr
+  #  network_mode: service:gluetun #not really needed but it's here in case you feel you need extra security
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/New_York
+      - PUID=${PUID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - PGID=${PGID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - TZ=${TZ} # typical representation of time zone (America/New_York) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
     volumes:
+      - ${STORAGE_FOLDER_LOCATION}/lidarr:/config # example location would be "/home/[user]/docker (no trailing slash)
       - /etc/localtime:/etc/localtime:ro
-      - /portainer/Files/AppData/Config/lidarr:/config
-      - /portainer/Files/media/music:/music
-      - /portainer/Files/downloads:/downloads
+      - /etc/timezone:/etc/timezone:ro      
+      - ${NET_SHARE}/music:/music
     ports:
       - 8686:8686
     restart: unless-stopped
-    labels:
-      - "diun.enable=true"
       
  #Request service
   overseerr:
     image: sctx/overseerr:latest
     container_name: overseerr
+  #  network_mode: service:gluetun #not really needed but it's here in case you feel you need extra security
     environment:
       - LOG_LEVEL=info
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/New_York
+      - PUID=${PUID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - PGID=${PGID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - TZ=${TZ} # typical representation of time zone (America/New_York) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
     ports:
       - 5055:5055
     volumes:
-      - /portainer/Files/AppData/Config/overseer:/config
+      - ${STORAGE_FOLDER_LOCATION}/overseer:/app/config # example location would be "/home/[user]/docker (no trailing slash)
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     restart: unless-stopped
-    labels:
-      - "diun.enable=true"
 
   # indexer mgmt    
   prowlarr:
     image: ghcr.io/linuxserver/prowlarr:develop
     container_name: prowlarr
+   # network_mode: service:gluetun #not really needed but it's here in case you feel you need extra security
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/New_York
+      - PUID=${PUID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - PGID=${PGID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - TZ=${TZ} # typical representation of time zone (America/New_York) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
     volumes:
-      - /portainer/Files/AppData/Config/prowlarr:/config
+      - ${STORAGE_FOLDER_LOCATION}/prowlarr:/config # example location would be "/home/[user]/docker (no trailing slash)
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro      
     ports:
       - 9696:9696
     restart: unless-stopped
-    labels:
-      - "diun.enable=true"
 
   readarr:
     image: lscr.io/linuxserver/readarr:nightly
     container_name: readarr
+   # network_mode: service:gluetun #not really needed but it's here in case you feel you need extra security
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=America/New_York
+      - PUID=${PUID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - PGID=${PGID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - TZ=${TZ} # typical representation of time zone (America/New_York) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
     volumes:
-      - /portainer/Files/AppData/Config/readarr:/config
-      - /portainer/Files/media/Books:/books
-      - /portainer/Files/downloads:/downloads
+      - ${STORAGE_FOLDER_LOCATION}/readarr:/config # example location would be "/home/[user]/docker (no trailing slash)
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro      
+      - ${NET_SHARE}/books:/books
     ports:
       - 8787:8787
     restart: unless-stopped
+
+  # downloader
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+   # network_mode: service:gluetun #this really isn't needed and will slow down downloads if you are using USENET
+    environment:
+      - PUID=${PUID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - PGID=${PGID} # typically "1000" but could be different depending on your user on the host OS for Docker
+      - TZ=${TZ} # typical representation of time zone (America/New_York) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+    volumes:
+      - ${STORAGE_FOLDER_LOCATION}/sabnzbd:/config # example location would be "/home/[user]/docker (no trailing slash)
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro      
+      - ${NET_SHARE}/tv:/tv
+      - ${NET_SHARE}/movies:/movies
+      - ${NET_SHARE}/music:/music
+      - ${NET_SHARE}/books:/books
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+
+#  gluetun:
+#    image: qmcgaw/gluetun
+#    container_name: vpn-gluetun
+    # line above must be uncommented to allow external containers to connect. See https://github.com/qdm12/gluetun/wiki/Connect-a-container-to-gluetun#external-container-to-gluetun
+#    cap_add:
+#      - NET_ADMIN
+#    devices:
+#      - /dev/net/tun:/dev/net/tun
+#    ports:
+#      - 8080:8080/tcp # Sabnzbd
+#    volumes:
+#      - ${STORAGE_FOLDER_LOCATION}/gluetun:/gluetun # example location would be "/home/[user]/docker (no trailing slash)
+#    environment:
+#      - VPN_SERVICE_PROVIDER=${GLUETON_PROVIDER}
+#      - OPENVPN_USER=${OPENVPN_USER}
+#      - OPENVPN_PASSWORD="${OPENVPN_PASS}"
+#      - SERVER_REGIONS=${OPENVPN_REGION}
+#    # - PRIVATE_INTERNET_ACCESS_VPN_PORT_FORWARDING=off # only needed if your VPN provider supports this feature and is enabled on your VPN account
+     # - PRIVATE_INTERNET_ACCESS_VPN_PORT_FORWARDING_STATUS_FILE=/tmp/gluetun/forwarded_port # only needed if your VPN provider supports this feature and is enabled on your VPN account
+#      - TZ=${TZ} # typical representation of time zone (America/New_York) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+
