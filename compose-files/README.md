@@ -7,7 +7,7 @@ I have recently put the "docker-compose.yaml" files into their respective folder
 ## Connecting directly to this repo to grab compose files in portainer
 
 1. Create a new stack and choose "Git Repository"
-![image](https://github.com/NightHawkATL/portainer-template-lists/assets/8395658/8ed7a5b3-47e7-449d-a445-3c47d96e168f)
+![image](https://github.com/NightHawkATL/portainer-template-lists/assets/8395658/52290c02-be16-482e-8cc1-38fb21f131db)
 
 2. Go to the main page of this repo and click the green "code" button and copy the URL to the ".git file.
 ![image](https://github.com/NightHawkATL/portainer-template-lists/assets/8395658/9fd8ef7f-3f00-42c8-a356-210c24b89093)
