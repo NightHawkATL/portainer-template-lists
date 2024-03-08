@@ -1,0 +1,53 @@
+# Use postgres/example user/password credentials
+version: '3.8'
+services:
+  database:
+    container_name: cal-database
+    image: postgres
+    restart: unless-stopped
+    volumes:
+      - /portainer/Files/AppData/Config/database-data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=database:5432
+
+  calcom:
+    image: calcom/cal.com:latest
+    restart: unless-stopped
+    container_name: cal-calcom
+    ports:
+      - ${CAL_PORT}:3000
+    environment:
+      - NEXT_PUBLIC_LICENSE_CONSENT=true
+      - LICENSE=
+      - NEXT_PUBLIC_WEBAPP_URL=${CAL_PUBLIC_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET} # run this command on any terminal: "openssl rnad -base64 32"
+      - CALENDSO_ENCRYPTION_KEY=${ENCR_KEY} # run this command on any terminal: "dd if=/dev/urandom bs=1k count=1 | md5sum". Remove any extra spaces and characters on the end, if neccesary.
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=database:5432
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@database:5432/${DB_NAME}
+      # Needed to run migrations while using a connection pooler like PgBouncer
+      # Use the same one as DATABASE_URL if you're not using a connection pooler
+      - DATABASE_DIRECT_URL=postgresql://${DB_USER}:${DB_PASSWORD}@database:5432/${DB_NAME}
+      - GOOGLE_API_CREDENTIALS={}
+      - CALCOM_TELEMETRY_DISABLED=
+      # Used for the Office 365 / Outlook.com Calendar integration
+      - MS_GRAPH_CLIENT_ID=
+      - MS_GRAPH_CLIENT_SECRET=
+      # Used for the Zoom integration
+      - ZOOM_CLIENT_ID=
+      - ZOOM_CLIENT_SECRET=
+      # E-mail settings
+      # Configures the global From: header whilst sending emails.
+      - EMAIL_FROM=${FROM_EMAIL}
+      # Configure SMTP settings (@see https://nodemailer.com/smtp/).
+      - EMAIL_SERVER_HOST=${SMTP_SERVER}
+      - EMAIL_SERVER_PORT=${SMTP_PORT}
+      - EMAIL_SERVER_USER=${SMTP_USER}
+      - EMAIL_SERVER_PASSWORD=${SMTP_PASS}
+    depends_on:
+      - database
