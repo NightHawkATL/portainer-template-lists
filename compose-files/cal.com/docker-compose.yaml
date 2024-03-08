@@ -20,7 +20,7 @@ services:
     ports:
       - ${CAL_PORT}:3000
     environment:
-      - NEXT_PUBLIC_LICENSE_CONSENT=true
+      - NEXT_PUBLIC_LICENSE_CONSENT=${CONSENT} # must be true to continue
       - LICENSE=
       - NEXT_PUBLIC_WEBAPP_URL=${CAL_PUBLIC_URL}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET} # run this command on any terminal: "openssl rnad -base64 32"
