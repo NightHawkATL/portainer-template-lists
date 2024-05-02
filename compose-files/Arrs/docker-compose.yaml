@@ -159,8 +159,15 @@ services:
 #      - NET_ADMIN
 #    devices:
 #      - /dev/net/tun:/dev/net/tun
-#    ports:
+#    ports: # remove the ports above from each service listed below to allow tunneling through this service 
 #      - 8080:8080/tcp # Sabnzbd
+#      - 8989:8989/tcp #sonarr
+#      - 7878:7878/tcp #radarr
+#      - 7878:7878/tcp #bazarr
+#      - 8686:8686/tcp #lidarr
+#      - 9696:9696/tcp #prowlarr
+#      - 8787:8787/tcp #readarr
+
 #    volumes:
 #      - ${STORAGE_FOLDER_LOCATION}/gluetun:/gluetun # example location would be "/home/[user]/docker (no trailing slash)
 #    environment:
