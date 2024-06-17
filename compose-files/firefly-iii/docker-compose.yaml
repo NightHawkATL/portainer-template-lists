@@ -1,0 +1,142 @@
+# *** See notes from ENV file here*** https://raw.githubusercontent.com/firefly-iii/firefly-iii/main/.env.example
+version: '3.3'
+
+services:
+  app:
+    image: fireflyiii/core:latest
+    hostname: app
+    container_name: firefly_iii_core
+    restart: always
+    volumes:
+      - /portainer/Files/AppData/Config/firefly/upload:/var/www/html/storage/upload
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - SITE_OWNER=EMAILADDRESS
+      - APP_KEY=MUSTBEEXACTLY32CHARACTERS
+      - DEFAULT_LANGUAGE=en_US
+      - DEFAULT_LOCALE=en_US
+      - TZ=America/New_York
+      - TRUSTED_PROXIES=
+      - LOG_CHANNEL=stack
+      - APP_LOG_LEVEL=notice
+      - AUDIT_LOG_LEVEL=emergency
+      - AUDIT_LOG_CHANNEL=
+      - PAPERTRAIL_HOST=
+      - PAPERTRAIL_PORT=
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=firefly
+      - DB_USERNAME=firefly
+      - DB_PASSWORD=CHANGEMENOW
+      - DB_SOCKET=
+      - MYSQL_USE_SSL=false
+      - MYSQL_SSL_VERIFY_SERVER_CERT=true
+      - MYSQL_SSL_CAPATH=/etc/ssl/certs/
+      - MYSQL_SSL_CA=
+      - MYSQL_SSL_CERT=
+      - MYSQL_SSL_KEY=
+      - MYSQL_SSL_CIPHER=
+      - PGSQL_SSL_MODE=prefer
+      - PGSQL_SSL_ROOT_CERT=null
+      - PGSQL_SSL_CERT=null
+      - PGSQL_SSL_KEY=null
+      - PGSQL_SSL_CRL_FILE=null
+      - PGSQL_SCHEMA=public
+      - CACHE_DRIVER=file
+      - SESSION_DRIVER=file
+      - REDIS_SCHEME=tcp
+      - REDIS_PATH=
+      - REDIS_HOST=127.0.0.1
+      - REDIS_PORT=6379
+      - REDIS_USERNAME=
+      - REDIS_PASSWORD=
+      - REDIS_DB="0"
+      - REDIS_CACHE_DB="1"
+      - COOKIE_PATH="/"
+      - COOKIE_DOMAIN=
+      - COOKIE_SECURE=false
+      - COOKIE_SAMESITE=lax
+      - MAIL_MAILER=smtp
+      - MAIL_HOST=MAILSMTPHOST
+      - MAIL_PORT=MAILPORT
+      - MAIL_FROM=MAILFROM
+      - MAIL_USERNAME=MAILUSERNAME
+      - MAIL_PASSWORD=MAILPASSWORD
+      - MAIL_ENCRYPTION=MAILENCRYPTION
+      # - MAIL_SENDMAIL_COMMAND=
+      # - MAILGUN_DOMAIN=
+      # - MAILGUN_SECRET=
+      # - MAILGUN_ENDPOINT=api.mailgun.net
+      # - MANDRILL_SECRET=
+      # - SPARKPOST_SECRET=
+      - SEND_ERROR_MESSAGE=true
+      - SEND_REPORT_JOURNALS=true
+      - ENABLE_EXTERNAL_MAP=true
+      - ENABLE_EXCHANGE_RATES=false
+      - ENABLE_EXTERNAL_RATES=false
+      - MAP_DEFAULT_LAT=DEFAULTLATITUDE
+      - MAP_DEFAULT_LONG=DEFAULTLONGITUDE
+      - MAP_DEFAULT_ZOOM=6
+      - VALID_URL_PROTOCOLS=http,https,ftp,ftps,mailto
+      - AUTHENTICATION_GUARD=web
+      - AUTHENTICATION_GUARD_HEADER=REMOTE_USER
+      - AUTHENTICATION_GUARD_EMAIL=EMAILADDRESS
+      # - PASSPORT_PRIVATE_KEY=
+      # - PASSPORT_PUBLIC_KEY=
+      # - CUSTOM_LOGOUT_URL=
+      - DISABLE_FRAME_HEADER=false
+      - DISABLE_CSP_HEADER=false
+      # - TRACKER_SITE_ID=
+      # - TRACKER_URL=
+      - ALLOW_WEBHOOKS=true
+      - STATIC_CRON_TOKEN=MUSTBEA32CHARACTERSTRING
+      - DKR_BUILD_LOCALE=false
+      - DKR_CHECK_SQLITE=true
+      - APP_NAME=FireflyIII
+      - BROADCAST_DRIVER=log
+      - QUEUE_DRIVER=sync
+      - CACHE_PREFIX=firefly
+      - PUSHER_KEY=
+      - IPINFO_TOKEN=
+      - PUSHER_SECRET=
+      - PUSHER_ID=
+      - DEMO_USERNAME=
+      - DEMO_PASSWORD=
+      - FIREFLY_III_LAYOUT=v1
+      - APP_URL=http://localhost
+    networks:
+      - firefly_iii
+    ports:
+      - 8788:8080
+    depends_on:
+      - db
+  db:
+    image: mariadb:lts
+    hostname: db
+    container_name: firefly_iii_db
+    restart: unless-stopped
+    networks:
+      - firefly_iii
+    volumes:
+      - /portainer/Files/AppData/Config/firefly/db:/var/lib/mysql
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_USER=firefly
+      - MYSQL_PASSWORD=CHANGEMENOW
+      - MYSQL_DATABASE=firefly
+  
+  cron:
+    image: alpine
+    restart: always
+    container_name: firefly_iii_cron
+    command: sh -c "echo \"0 3 * * * wget -qO- http://app:8080/api/v1/cron/MUSTBEA32CHARACTERSTRING\" | crontab - && crond -f -L /dev/stdout"
+    environment:
+      - STATIC_CRON_TOKEN=MUSTBEA32CHARACTERSTRING
+    networks:
+      - firefly_iii
+
+networks:
+  firefly_iii:
+    driver: bridge
