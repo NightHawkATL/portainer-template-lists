@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  filebrowser:
+    image: hurlenko/filebrowser
+    container_name: filebrowser
+    network_mode: bridge
+    user: "1000:1000"  ## You may have to set the PUID and GUID in the environemtn section if you get permissions issues in the console
+    ports:
+      - 1443:8080
+    volumes:
+      - /portainer/Files/AppData/Config/:/data  ## Set this to your docker folder where you store all of your files
+      - /portainer/Files/AppData/Config/file-browser/config:/config  ## This is where the filebrowser config will go
+    environment:
+      - FB_BASEURL=/filebrowser
+#      - PUID=1000  ## Only enable if the "user" option above doesn't work
+#      - PGID=1000  ## Only enable if the "user" option above doesn't work
+    restart: always
