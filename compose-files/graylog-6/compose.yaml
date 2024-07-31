@@ -1,0 +1,121 @@
+version: '3'
+services:
+    # The logs themselves are stored in Opensearch
+  opensearch:
+    image: opensearchproject/opensearch:2
+    container_name: opensearch
+    environment:
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "bootstrap.memory_lock=true"
+      - "discovery.type=single-node"
+      - "action.auto_create_index=false"
+      - "plugins.security.ssl.http.enabled=false"
+      - "plugins.security.disabled=true"
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_PASSWORD} # RUN: tr -dc A-Z-a-z-0-9_@#%^-_=+ < /dev/urandom  | head -c${1:-32}
+    volumes:
+      - "log_data:/usr/share/opensearch/data"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - 9200:9200/tcp
+    networks:
+      - graynet
+    restart: unless-stopped
+  
+  # Graylog stores configuration in MongoDB
+  mongo:
+    image: mongo:6.0.5-jammy
+    container_name: mongodb
+    volumes:
+      - "mongo_data:/data/db"
+    networks:
+      - graynet
+    restart: unless-stopped
+    depends_on:
+      opensearch:
+        condition: "service_started"
+
+  graylog:
+    image: graylog/graylog:6.0
+    container_name: graylog
+    entrypoint: /usr/bin/tini -- wait-for-it opensearch:9200 -- /docker-entrypoint.sh
+    environment:
+      GRAYLOG_NODE_ID_FILE: "/usr/share/graylog/data/config/node-id"
+      # CHANGE ME (must be at least 16 characters)! RUN: /dev/urandom tr -dc A-Z-a-z-0-9 | head -c${1:-96};echo;
+      GRAYLOG_PASSWORD_SECRET: "${PASSWORD_SECRET}"
+      # CHANGEME (RUN: echo -n "Enter Password: " && head -1 </dev/stdin | tr -d '\n' | sha256sum | cut -d" " -f1)
+      GRAYLOG_ROOT_PASSWORD_SHA2: "${ROOT_SHA2_PASSWORD}"
+      GRAYLOG_HTTP_BIND_ADDRESS: "0.0.0.0:9000"
+      GRAYLOG_HTTP_EXTERNAL_URI: "http://localhost:9000/"
+      GRAYLOG_ELASTICSEARCH_HOSTS: "http://opensearch:9200"
+      GRAYLOG_MONGODB_URI: "mongodb://mongodb:27017/graylog"
+      GRAYLOG_TIMEZONE: "${TZ}"
+      TZ: "${TZ}"
+      GRAYLOG_TRANSPORT_EMAIL_PROTOCOL: "smtp"
+      GRAYLOG_TRANSPORT_EMAIL_WEB_INTERFACE_URL: "${WEB_INTERFACE_URL}"
+      GRAYLOG_TRANSPORT_EMAIL_HOSTNAME: "${EMAIL_SERVER:smtp.gmail.com}"
+      GRAYLOG_TRANSPORT_EMAIL_ENABLED: "${EMAIL_ENABLED:true}"
+      GRAYLOG_TRANSPORT_EMAIL_PORT: "${EMAIL_PORT:587}"
+      GRAYLOG_TRANSPORT_EMAIL_USE_AUTH: "${EMAIL_AUTH:true}"
+      GRAYLOG_TRANSPORT_EMAIL_AUTH_USERNAME: "${EMAIL_USERNAME}"
+      GRAYLOG_TRANSPORT_EMAIL_AUTH_PASSWORD: "${EMAIL_PASSWORD}"
+      GRAYLOG_TRANSPORT_EMAIL_USE_TLS: "true"
+      GRAYLOG_TRANSPORT_EMAIL_USE_SSL: "false"
+      GRAYLOG_TRANSPORT_FROM_EMAIL: "graylog@example.com"
+      GRAYLOG_TRANSPORT_SUBJECT_PREFIX: "[graylog]"
+    volumes:
+      - "/home/${USER}/docker/graylog/graylog.conf:/usr/share/graylog/config/graylog.conf" # Must be in folder before start
+      - "graylog_data:/usr/share/graylog/data"
+      - "graylog_etc:/etc/graylog/server/"
+    networks:
+      - graynet
+    restart: always
+    depends_on:
+      opensearch:
+        condition: "service_started"
+      mongo:
+        condition: "service_started"
+    ports:
+      - 9000:9000/tcp   # Graylog web interface and REST API
+      - 1514:1514/udp   # Syslog - iDRAC
+      - 1516:1516/udp   # Syslog - Meraki
+      - 1518:1518/udp   # Syslog - TrueNAS
+      - 1520:1520/udp   # Syslog - Meraki Security Events
+      - 1522:1522/udp   # Syslog - Meraki Flows
+      - 1524:1524/udp   # Syslog - PVE1
+      - 1526:1526/udp   # Syslog - PVE2
+      - 1528:1528/udp   # Syslog - PBS
+      - 1530:1530/udp   # Syslog - Plex
+      - 1532:1532/udp   # Syslog - Home Assistant
+      # - 1534:1534/udp   # Syslog - DNS1
+      # - 1536:1536/udp   # Syslog - DNS2
+      # - 1538:1538/udp   # Syslog - DNS3
+      # - 1540:1540/udp   # Syslog - DNS4
+      - 1542:1542/udp   # Syslog - AMP Game Server
+      - 1544:1544/udp   # Syslog - OpenWebUI
+      - 1546:1546/udp   # Syslog - Gendock
+      - 1548:1548/udp   # Syslog - MonDock
+      - 1550:1550/udp   # Syslog - DockArr
+      - 1552:1552/udp   # Syslog - Unifi Controller
+      - 12201:12201/tcp # GELF
+      - 12201:12201/udp # GELF
+
+networks:
+  graynet:
+    driver: bridge
+
+# This is how you persist data between container restarts
+volumes:
+  mongo_data:
+    driver: local
+  log_data:
+    driver: local
+  graylog_data:
+    driver: local
+  graylog_etc:
+    driver: local
