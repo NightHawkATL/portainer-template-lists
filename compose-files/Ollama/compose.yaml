@@ -1,0 +1,73 @@
+services:
+  ollama:
+    volumes:
+      - ollama:/root/.ollama
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
+    image: ollama/ollama:latest
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    ports:
+      - 11434:11434
+
+# GPU support
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities:
+                - gpu   
+
+  open-webui:
+    build:
+      context: .
+      args:
+        OLLAMA_BASE_URL: '/ollama'
+      dockerfile: Dockerfile
+    image: ghcr.io/open-webui/open-webui:latest
+    container_name: openwebui
+    volumes:
+      - open-webui:/app/backend/data
+    depends_on:
+      - ollama
+    ports:
+      - ${OPEN_WEBUI_PORT-3000}:8080
+    environment:
+      - 'OLLAMA_BASE_URL=http://ollama:11434'
+      - 'WEBUI_SECRET_KEY='
+      - 'AUTOMATIC1111_BASE_URL=http://host.docker.internal:7860'
+      - 'ENABLE_IMAGE_GENERATION=True'
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+  
+  # stable-diffusion-webui:
+  #   # Not built for ARM64
+  #   platform: linux/amd64
+  #   image: ghcr.io/neggles/sd-webui-docker:latest
+  #   restart: unless-stopped
+  #   container_name: a1111
+  #   environment:
+  #     CLI_ARGS: "--api --use-cpu all --precision full --no-half --skip-torch-cuda-test --ckpt /empty.pt --do-not-download-clip --disable-nan-check --disable-opt-split-attention"
+  #     PYTHONUNBUFFERED: "1"
+  #     TERM: "vt100"
+  #     SD_WEBUI_VARIANT: "default"
+  #   # Hack to get container working on Apple Silicon
+  #   # Rosetta creates a conflict ${HOME}/.cache folder
+  #   entrypoint: /bin/bash
+  #   command:
+  #     - -c
+  #     - |
+  #       export HOME=/root-home
+  #       rm -rf $${HOME}/.cache
+  #       /docker/entrypoint.sh python -u webui.py --listen --port $${WEBUI_PORT} --skip-version-check $${CLI_ARGS}
+  #   volumes:
+  #     - a1111:/empty.pt
+
+volumes:
+  ollama: {}
+  open-webui: {}
