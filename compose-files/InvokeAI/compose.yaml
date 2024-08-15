@@ -1,0 +1,22 @@
+services:
+    invoke-ai:
+        image: ghcr.io/invoke-ai/invokeai
+        container_name: invoke_ai
+        ports:
+            - '9090:9090'
+        environment:
+        # - INVOKEAI_ROOT=/portainer/Files/AppData/Config/invokeai-data
+        - HOST_INVOKEAI_ROOT=/portainer/Files/AppData/Config/invokeai-data
+        - CONTAINER_INVOKEAI_ROOT=/invokeai
+        - GPU_DRIVER=cuda
+        volumes:
+        - /portainer/Files/AppData/Config/invokeai-data:/invokeai
+        runtime: nvidia
+        deploy:
+          resources:
+            reservations:
+              devices:
+                - driver: nvidia
+                  count: 1
+                  capabilities:
+                    - gpu  
