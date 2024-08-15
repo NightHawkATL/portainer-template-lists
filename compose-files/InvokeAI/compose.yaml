@@ -11,6 +11,7 @@ services:
         - GPU_DRIVER=cuda
         volumes:
         - /portainer/Files/AppData/Config/invokeai-data:/invokeai
+        restart: unless-stopped
         runtime: nvidia
         deploy:
           resources:
