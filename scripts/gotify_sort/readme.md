@@ -18,4 +18,4 @@ Please read through these steps first before continuing. I take no responsabilit
 As you add more applications, they will be out of order. You will need to re-run this script each time you add a new application to re-sort them correctly.
 
 
-Thanks to [samcro1967](https://github.com/samcro1967) for providing his script on [this](https://github.com/gotify/server/issues/358#issuecomment-2316326913) thread.
+Thanks to [samcro1967](https://github.com/samcro1967) for providing his script on [this](https://github.com/gotify/server/issues/358#issuecomment-2316326913) thread. I only verified that it works and created a write-up. I am putting it here to share with others I converse with to make it easy for them to replicate.
