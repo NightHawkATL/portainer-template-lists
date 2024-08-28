@@ -14,3 +14,8 @@ Please read through these steps first before continuing. I take no responsabilit
 8. You should get a message stating "Applications table IDs updated successfully" upon completion.
 9. re-start the gotify container and verify that the applications have ben re-ordered into alphabetical order.
 10. If the applications are blank or missing, just stop the container and replace the database file with the one you backed up earlier.
+
+As you add more applications, they will be out of order. You will need to re-run this script each time you add a new application to re-sort them correctly.
+
+
+Thanks to [samcro1967](https://github.com/samcro1967) for providing his script on [this](https://github.com/gotify/server/issues/358#issuecomment-2316326913) thread.
