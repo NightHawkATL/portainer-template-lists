@@ -2,7 +2,7 @@ version: '3.3'
 services:
   speedtest-tracker:
     container_name: speedtest-tracker
-    image: 'ghcr.io/alexjustesen/speedtest-tracker:v0.11.17'
+    image: 'lscr.io/linuxserver/speedtest-tracker:latest'
     ports:
     - '8087:80'
     - '8448:443'
@@ -16,6 +16,12 @@ services:
     - DB_USERNAME=speedy
     - DB_PASSWORD= #MakeYourOwnStrongPassword
     - TZ=America/New_York
+    - PUBLIC_DASHBOARD=true
+    - APP_NAME="Speedtest Tracker" #Name it what you want here.
+    - APP_KEY= #MakeYourOwnBase64AppKey - https://generate.plus/en/base64
+    - SPEEDTEST_SCHEDULE="0 */2 * * *" # can be represented as a cron schedule same as before. Mine is every 2 hours. https://cron.help/
+    - SPEEDTEST_SERVERS="60331" # you can add one or many servers separated by a comma (i.e. "123456,654321,987654"). You will need to locate the server IDs yourself. https://williamyaps.github.io/wlmjavascript/servercli.html
+    - PRUNE_RESULTS_OLDER_THAN=0 # the default is 0 which disables result pruning, this value is in days.
     volumes:
     - '/etc/localtime:/etc/localtime:ro'
     - '/portainer/Files/AppData/Config/st2/config:/config'
