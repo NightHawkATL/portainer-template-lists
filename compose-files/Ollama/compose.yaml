@@ -44,29 +44,6 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     restart: unless-stopped
-  
-  # stable-diffusion-webui:
-  #   # Not built for ARM64
-  #   platform: linux/amd64
-  #   image: ghcr.io/neggles/sd-webui-docker:latest
-  #   restart: unless-stopped
-  #   container_name: a1111
-  #   environment:
-  #     CLI_ARGS: "--api --use-cpu all --precision full --no-half --skip-torch-cuda-test --ckpt /empty.pt --do-not-download-clip --disable-nan-check --disable-opt-split-attention"
-  #     PYTHONUNBUFFERED: "1"
-  #     TERM: "vt100"
-  #     SD_WEBUI_VARIANT: "default"
-  #   # Hack to get container working on Apple Silicon
-  #   # Rosetta creates a conflict ${HOME}/.cache folder
-  #   entrypoint: /bin/bash
-  #   command:
-  #     - -c
-  #     - |
-  #       export HOME=/root-home
-  #       rm -rf $${HOME}/.cache
-  #       /docker/entrypoint.sh python -u webui.py --listen --port $${WEBUI_PORT} --skip-version-check $${CLI_ARGS}
-  #   volumes:
-  #     - a1111:/empty.pt
 
 volumes:
   ollama: {}
