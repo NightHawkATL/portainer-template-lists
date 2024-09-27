@@ -39,12 +39,30 @@ services:
     environment:
       - 'OLLAMA_BASE_URL=http://ollama:11434'
       - 'WEBUI_SECRET_KEY='
-      - 'AUTOMATIC1111_BASE_URL=http://host.docker.internal:7860'
-      - 'ENABLE_IMAGE_GENERATION=True'
     extra_hosts:
       - host.docker.internal:host-gateway
+    restart: unless-stopped
+
+  #Speech models
+  opened-ai:
+    image: ghcr.io/matatonic/openedai-speech
+    container_name: openedai-speech
+    environment:
+      - TTS_HOME=voices
+      - HF_HOME=voices
+      - TZ=America/New_York
+    ports:
+      - "8000:8000"
+    volumes:
+      - tts-voices:/app/voices
+      - tts-config:/app/config
+      - /etc/timezone:/etc/timezone
+      - /etc/localtime:/etc/localtime
     restart: unless-stopped
 
 volumes:
   ollama: {}
   open-webui: {}
+  #Speech Models storage
+  tts-voices: {}
+  tts-config: {}
