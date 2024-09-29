@@ -39,6 +39,11 @@ services:
     environment:
       - 'OLLAMA_BASE_URL=http://ollama:11434'
       - 'WEBUI_SECRET_KEY='
+      - ENABLE_RAG_WEB_SEARCH=true
+      - RAG_WEB_SEARCH_ENGINE="searxng"
+      - RAG_WEB_SEARCH_RESULT_COUNT=3
+      - RAG_WEB_SEARCH_CONCURRENT_REQUESTS=10
+      - SEARXNG_QUERY_URL="http://SearxngIP:port/search?q=<query>" #You can also use a proxied or public version but the local IP and port also works.
     extra_hosts:
       - host.docker.internal:host-gateway
     restart: unless-stopped
