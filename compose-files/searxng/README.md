@@ -5,6 +5,7 @@ I have added links to most of the relevant pages on the Gluetun GitHub page to p
 Gluetun works best with paid VPN providers as there is great documentation on most of the popular services. They also have documentation on using custom providers and even an option for using Wireguard with PIA, but it is not supported within the project yet.
 
 Link to SearxNG settings file: https://github.com/searxng/searxng-docker/blob/master/searxng/settings.yml
+
 Link to SearxNG limiter file: https://github.com/searxng/searxng-docker/blob/master/searxng/limiter.toml
 
 Project is based on a culmination from the SearxNG Docker deployment: https://github.com/searxng/searxng-docker and MrWazaby's original compose for SearxNG with Gluetun: https://github.com/MrWazaby/searxng-vpn-docker. I just wanted to provide my spin to make sure that there are no issues with startup and restarting using dependencies.
