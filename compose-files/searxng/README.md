@@ -13,4 +13,5 @@ Project is based on a culmination from the SearxNG Docker deployment: https://gi
 **If you choose to use the HTTP proxy or the ShadowSOCKS proxy and restart the stack, you may get an error stating that the stack could not be stopped or similar errors when working on the container. THis is because you are connected to the proxy and once it goes down, it will appear that you do not have an internet connection. Just disable your proxy connection either on your browser or your network connection to fix this error before stopping or restarting the services.
 
 When using the proxy for your browser, you will need to locate the network settings for your browser and put in the relevant information:
+
 ![image](https://github.com/user-attachments/assets/245e90d4-227b-49a6-8358-0d27312cbc64)
