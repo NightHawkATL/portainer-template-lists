@@ -1,0 +1,92 @@
+services:
+  redis: # For caching to improve speed
+    container_name: searxng-redis
+    hostname: searxng-redis
+    image: docker.io/valkey/valkey:8-alpine
+    command: valkey-server --save 30 1 --loglevel warning
+    restart: unless-stopped
+   # user: "1000:1000" # Only needed if using a local persistent volume and have permissions issues
+    volumes: # Only one volume declaration is needed depending on how you wish to deploy it
+   #   - /portainer/Files/AppData/Config/searxng2/redis:/data
+      - valkey-data:/data #  Use a docker volume to help with permissions
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+  gluetun:  # https://github.com/qdm12/gluetun
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    # line above must be uncommented to allow external containers to connect. See https://github.com/qdm12/gluetun/wiki/Connect-a-container-to-gluetun#external-container-to-gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:  # https://github.com/qdm12/gluetun-wiki/blob/main/setup/port-mapping.md
+      - 8888:8888/tcp # HTTP proxy
+      - 8388:8388/tcp # Shadowsocks
+      - 8388:8388/udp # Shadowsocks
+      - 8181:8080/tcp # SearxNG
+    volumes:
+      - /portainer/Files/AppData/Config/gluetun:/gluetun
+    environment:
+      #  Providers list: https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers
+      - VPN_SERVICE_PROVIDER=private internet access # Change to your VPN provider service
+      - OPENVPN_USER="${VPN_USERNAME}"
+      - OPENVPN_PASSWORD="${VPN_PASSWORD}"
+      - SERVER_REGIONS="${VPN_SERVER_REGION}"
+      - TZ="${TZ}"
+      #  Proxy information: https://github.com/qdm12/gluetun-wiki/blob/main/setup/connect-a-lan-device-to-gluetun.md
+      - HTTPPROXY=on  # Enables the HTTP Proxy
+      - HTTPPROXY_USER="${PROXY_USERNAME}"  # Set if you want a login to connect to the proxy
+      - HTTPPROXY_PASSWORD="${PROXY_PASS}" # Set if you want a login to connect to the proxy
+      - HTTPPROXY_LOG=off  # Enable/Disable Logging
+      - SHADOWSOCKS=on  # Enables the shadowSOCKS proxy   
+      - SHADOWSOCKS_PASSWORD="${SOCKS_PASS}"  # Set if you want a password to connect to it
+      - SHADOWSOCKS_LOG=off  #Enables/Disables Logging
+      - FIREWALL_OUTBOUND_SUBNETS="${LOCAL_NETWORK}"  # Set to the allowed subnets for local network access when the proxy is enabled (ex. 192.168.0.0/24, 10.0.2.0/24, or 172.16.0.0/24. Can also be a full network like 10.0.0.0/8
+      # Testing the VPN after deployment: https://github.com/qdm12/gluetun-wiki/blob/main/setup/test-your-setup.md
+
+  searxng:
+    container_name: searxng
+    image: docker.io/searxng/searxng:latest
+    restart: unless-stopped
+    network_mode: "service:gluetun"  # https://github.com/qdm12/gluetun-wiki/blob/main/setup/connect-a-container-to-gluetun.md
+    # user: "1000:1000"  #This is only needed if you get permissions errors.
+    # ports:
+    #   - "8181:8080" #change 8181 as needed, but not 8080
+    volumes:
+      - /portainer/Files/AppData/Config/searxng2/:/etc/searxng:rw
+    #  - searxng:/etc/searxng:rw # If this is used rather than the persistent volume above, you may need access to the volume to edit the settings file or exec into the container to edit it. You will also need to create a "limiter.toml" file to clear out any errors in the logs.
+    environment: # Only 1 "SEARXNG_BASE_URL" is needed depending on how you are running it. the proxy version is needed to correctly save settings on the webGUI
+      - SEARXNG_BASE_URL=https://search.domain.com/ #Change to "https://your.domain.tld" when running through a proxy
+      # - SEARXNG_BASE_URL=http://10.0.2.25:8181/ # Change to "http://your.docker.ip:port" when running locally
+      - UWSGI_WORKERS=4 #You can change this
+      - UWSGI_THREADS=4 #You can change this
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+    depends_on: # these are needed to make sure that gluetun and redis have started before searxng to allow for connectivity and successful starting
+      gluetun:
+        condition: "service_healthy"
+      redis:
+        condition: "service_started"
+
+volumes:
+#  searxng: #searxng storage
+  valkey-data: #redis storage
