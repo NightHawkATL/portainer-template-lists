@@ -10,6 +10,8 @@ Link to SearxNG limiter file: https://github.com/searxng/searxng-docker/blob/mas
 
 Project is based on a culmination from the SearxNG Docker deployment: https://github.com/searxng/searxng-docker and MrWazaby's original compose for SearxNG with Gluetun: https://github.com/MrWazaby/searxng-vpn-docker. I just wanted to provide my spin to make sure that there are no issues with startup and restarting using dependencies.
 
+I also learned about Gluetun from this video when it came out from NovaSpirit Tech: https://youtu.be/IWj1-j2QWvo?si=DYdgtngZu4_Jy7S5. He also covers the SOCKS5 and HTTP proxy connectivity.
+
 **If you choose to use the HTTP proxy or the ShadowSOCKS proxy and restart the stack, you may get an error stating that the stack could not be stopped or similar errors when working on the container. THis is because you are connected to the proxy and once it goes down, it will appear that you do not have an internet connection. Just disable your proxy connection either on your browser or your network connection to fix this error before stopping or restarting the services.
 
 When using the proxy for your browser, you will need to locate the network settings for your browser and put in the relevant information:
