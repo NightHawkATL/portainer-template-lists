@@ -1,0 +1,99 @@
+name: immich
+
+services:
+  immich-server:
+    container_name: immich_server
+    hostname: immich-server
+    image: ghcr.io/immich-app/immich-server:release
+    # command: ['start.sh', 'immich']
+    volumes:
+      - /portainer/Files/AppData/Config/immich/photos:/usr/src/app/upload # Chantge this to whereever you have your images stored or want to be stored. I would recommend somewhere on a different server on an array possibly.
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+    - DB_PASSWORD=${IMMICHDB_PASS}
+    - DB_USERNAME=${IMMICHDB_USER}
+    - DB_DATABASE_NAME=${IMMICHDB_NAME}
+    ports:
+      - 2283:2283
+    depends_on:
+      redis:
+        condition: "service_started"
+      database:
+        condition: "service_healthy"
+      immich-machine-learning:
+        condition: "service_healthy"
+    restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.depends-on redis,database,immich-machine-learning
+
+
+
+  immich-machine-learning:
+    container_name: immich_machine_learning
+    # For hardware acceleration, add one of -[armnn, cuda, openvino] to the image tag.
+    # Example tag: ${IMMICH_VERSION:-release}-cuda
+    image: ghcr.io/immich-app/immich-machine-learning:release
+    # extends: # uncomment this section for hardware acceleration - see https://immich.app/docs/features/ml-hardware-acceleration
+    #   file: hwaccel.ml.yml
+    #   service: cpu # set to one of [armnn, cuda, openvino, openvino-wsl] for accelerated inference - use the `-wsl` version for WSL2 where applicable
+    volumes:
+      - /portainer/Files/AppData/Config/immich/ml-cache:/cache
+    restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.depends-on redis,database,immich-server
+    depends_on:
+      redis:
+        condition: "service_started"
+      database:
+        condition: "service_started"
+
+  redis:
+    container_name: immich_redis
+    image: registry.hub.docker.com/library/redis:6.2-alpine@sha256:84882e87b54734154586e5f8abd4dce69fe7311315e2fc6d67c29614c8de2672
+    restart: unless-stopped
+
+  database:
+    container_name: immich_postgres
+    image: registry.hub.docker.com/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
+    environment:
+      DB_PASSWORD: ${IMMICHDB_PASS}
+      DB_USERNAME: ${IMMICHDB_USER}
+      DB_DATABASE_NAME: ${IMMICHDB_NAME}
+    volumes:
+      - /portainer/Files/AppData/Config/immich/db:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready --dbname='{IMMICHDB_NAME}' --username='${IMMICHDB_USER}' || exit 1; Chksum="$$(psql --dbname='{IMMICHDB_NAME}' --username='${IMMICHDB_USER}' --tuples-only --no-align --command='SELECT COALESCE(SUM(checksum_failures), 0) FROM pg_stat_database')"; echo "checksum failure count is $$Chksum"; [ "$$Chksum" = '0' ] || exit 1
+      interval: 5m
+      start_interval: 30s
+      start_period: 5m
+    command:
+      [
+        'postgres',
+        '-c',
+        'shared_preload_libraries=vectors.so',
+        '-c',
+        'search_path="$$user", public, vectors',
+        '-c',
+        'logging_collector=on',
+        '-c',
+        'max_wal_size=2GB',
+        '-c',
+        'shared_buffers=512MB',
+        '-c',
+        'wal_compression=on',
+      ]
+    restart: unless-stopped
+
+  immich-public-proxy:
+    image: alangrainger/immich-public-proxy:latest
+    container_name: immich-public-proxy
+    restart: unless-stopped
+    ports:
+      - 3101:3000
+    environment:
+      IMMICH_URL: http://immich-server:2283
+      PORT: "3000"
+      CACHE_AGE: 2592000
+    depends_on:  
+      immich-server:
+        condition: "service_healthy"
