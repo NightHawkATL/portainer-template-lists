@@ -5,9 +5,8 @@ services:
     container_name: immich_server
     hostname: immich-server
     image: ghcr.io/immich-app/immich-server:release
-    # command: ['start.sh', 'immich']
     volumes:
-      - /portainer/Files/AppData/Config/immich/photos:/usr/src/app/upload # Chantge this to whereever you have your images stored or want to be stored. I would recommend somewhere on a different server on an array possibly.
+      - /portainer/Files/AppData/Config/immich/photos:/usr/src/app/upload # Change this to where ever you have your images stored or want to be stored. I would recommend somewhere on a different server on an array possibly.
       - /etc/localtime:/etc/localtime:ro
     environment:
     - DB_PASSWORD=${IMMICHDB_PASS}
@@ -25,8 +24,6 @@ services:
     restart: unless-stopped
     labels:
       - com.centurylinklabs.watchtower.depends-on redis,database,immich-machine-learning
-
-
 
   immich-machine-learning:
     container_name: immich_machine_learning
