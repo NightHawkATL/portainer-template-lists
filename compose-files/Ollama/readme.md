@@ -9,7 +9,7 @@ If this is a fresh VM, you will need to follow these steps. (this is assuming th
 4. Open the conf file with the editor of your choice.
 5. Look for the CPU line and set it to look like this: "cpu: host,hidden=1".
 6. Save and exit the editor.
-7. Follow the steps [here](![image]([https://github.com/user-attachments/assets/e0b5828f-44ad-4431-88e4-d27fe93cd9ec](https://github.com/NightHawkATL/portainer-template-lists/blob/main/compose-files/Ollama/proxmox-steps.txt)) to configure Proxmox to block the GPU drivers.
+7. Follow the steps [here]([https://github.com/user-attachments/assets/e0b5828f-44ad-4431-88e4-d27fe93cd9ec](https://github.com/NightHawkATL/portainer-template-lists/blob/main/compose-files/Ollama/proxmox-steps.txt)) to configure Proxmox to block the GPU drivers.
 8. Once this is done, start the VM and login.
 9. Run "sudo bash -c "echo blacklist nouveau > /etc/modprobe.d/blacklist-nvidia-nouveau.conf".
 10. Run "sudo bash -c "echo options nouveau modset=0 >> /etc/modprobe.d/blacklist-nvidia-nouveau.conf".
