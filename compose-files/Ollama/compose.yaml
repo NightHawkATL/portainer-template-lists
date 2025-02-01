@@ -64,6 +64,8 @@ services:
       - /etc/timezone:/etc/timezone
       - /etc/localtime:/etc/localtime
     restart: unless-stopped
+    depends_on:
+      - ollama
 
 volumes:
   ollama: {}
