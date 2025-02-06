@@ -1,0 +1,28 @@
+services:
+  hbbs:
+    container_name: hbbs
+    image: rustdesk/rustdesk-server:latest
+    command: hbbs -r ${SUBDOMAIN_DOMAIN_TLD}:21117
+    network_mode: host # Must be disabled to use ports below
+    # ports:
+    #   - 21115:21115
+    #   - 21116:21116
+    #   - 21116:21116/udp
+    #   - 21118:21118
+    volumes:
+      - /portainer/Files/AppData/Config/rust-desk/data:/root
+    depends_on:
+      - hbbr
+    restart: unless-stopped
+
+  hbbr:
+    container_name: hbbr
+    image: rustdesk/rustdesk-server:latest
+    command: hbbr
+    network_mode: host # Must be disabled to use ports below
+    # ports:
+    #   - 21117:21117
+    #   - 21119:21119
+    volumes:
+      - /portainer/Files/AppData/Config/rust-desk/data:/root
+    restart: unless-stopped
