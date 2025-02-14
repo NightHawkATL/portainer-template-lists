@@ -1,17 +1,17 @@
-version: '2.4'
-
 services:
-  monocker:
+monocker:
     container_name: monocker
     image: petersem/monocker
+    # network_mode: bridge
     environment:
       # Optional label to preface messages. Handy if you are running multiple versions of Monocker
-      SERVER_LABEL: 'Docker'
+      SERVER_LABEL: '${DOCKER_NAME}'
       # Specify the messaging platform and details, or leave blank if only wanting container logs (pick one only)
       # MESSAGE_PLATFORM: 'telegram@your_bot_id@your_chat_id'
       # MESSAGE_PLATFORM: 'pushbullet@your_api_key@your_device_id'
-      MESSAGE_PLATFORM: 'pushover@<pushover-key>'
-      # MESSAGE_PLATFORM: 'discord@https://discord.com/api/webhooks/1021828307177701486/y-DYzZbzlJfYZP_7pBJePRnNR3wMb5dVrRNB5DV_kpgZsG3Jsi1dNBnZyTDD_KdAzBMp'
+      # MESSAGE_PLATFORM: 'pushover@your_api_key@your_device_id'
+      MESSAGE_PLATFORM: 'gotify@gotify-url@app-token'
+      # MESSAGE_PLATFORM: 'discord@bot-webhook-url'
       # MESSAGE_PLATFORM: ''
       # Optional - includes or excludes specified containers - default behaviour is false
       LABEL_ENABLE: 'false'
@@ -19,6 +19,7 @@ services:
       ONLY_OFFLINE_STATES: 'false'
       # Optional - regardless of any other settings, you can ignore or include 'exited'
       EXCLUDE_EXITED: 'false'      
+      PGID: 1000
+      PUID: 1000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    restart: unless-stopped
