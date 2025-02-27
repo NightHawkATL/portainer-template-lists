@@ -27,6 +27,6 @@ If this is a fresh VM, you will need to follow these steps. (this is assuming th
 ![image](https://github.com/user-attachments/assets/79ed1362-f606-4519-81bf-d583419965b9)
 21. Now you will need to install the NVIDIA container toolkit. Visit [https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) to install the cuda toolkit. Follow the "Install with APT" section and then follow-up with the "Configuration" section to setup docker to use it.
 22. Reboot just to make sure everthing is setup and running.
-23. After the reboot and login, run "nvidia-smi" to make sure tha the drivers loaded at startup and the GPU is still found.
+23. After the reboot and login, run ```nvidia-smi``` to make sure tha the drivers loaded at startup and the GPU is still found.
 
 Once all of this is done, you will be able to copy the stack from the compose.yaml to deploy the stack and run Ollama, OpenWebUI and begin using it.
