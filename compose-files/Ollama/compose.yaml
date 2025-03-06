@@ -23,11 +23,6 @@ services:
                 - gpu   
 
   open-webui:
-    build:
-      context: .
-      args:
-        OLLAMA_BASE_URL: '/ollama'
-      dockerfile: Dockerfile
     image: ghcr.io/open-webui/open-webui:latest
     container_name: openwebui
     volumes:
