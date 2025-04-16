@@ -28,7 +28,10 @@ services:
     volumes:
       - open-webui:/app/backend/data
     depends_on:
-      - ollama
+      ollama:
+        condition: "service_started"
+      ollama-up:
+        condition: "service_healthy"
     ports:
       - ${OPEN_WEBUI_PORT-3000}:8080
     environment:
@@ -44,7 +47,7 @@ services:
     restart: unless-stopped
 
   #Speech models
-  opened-ai:
+  opened-ai: # This is for better speech generation within OpenWebUI
     image: ghcr.io/matatonic/openedai-speech
     container_name: openedai-speech
     environment:
@@ -61,6 +64,18 @@ services:
     restart: unless-stopped
     depends_on:
       - ollama
+
+    ollama-up:
+      image: curlimages/curl
+      container_name: ollama-up
+      command: sleep inf
+      healthcheck:
+        test: curl ollama:11434
+        interval: 5s
+        start_period: 5s
+      restart: on-failure
+      depends_on:
+        - ollama
 
 volumes:
   ollama: {}
