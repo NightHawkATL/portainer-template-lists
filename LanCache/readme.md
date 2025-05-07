@@ -19,7 +19,7 @@ I installed LanCache on a VM that has a small “internal” storage and a large
 6. After this is done on all AdGuard servers, reboot them to allow the configuration changes to take effect in unbound (or restart the unbound service).
 7. In the AdGuard interface, verify that the upstream DNS server is “127.0.0.1:5335” to utilize unbound and follow the DNS rewrites for unbound and LanCache.
 8. Once that is done, you will need to verify that everything works on the computer or LAN.
-  - First, you will want to “flush” your DNS cache. In windows it is “ipconfig /flushdns”.
+  - First, you will want to “flush” your DNS cache. In windows it is `ipconfig /flushdns`.
   - Then, do an nslookup to lancache.steamcontent.com `nslookup lancache.steamcontent.com`.
   - You should see a result where it locates the entry in your DNS (AdGuardHome) and then points to the LanCache server IP.
     ![image](https://github.com/user-attachments/assets/0ccbeb5b-3fba-4ccc-a00a-3f96132218c7)
