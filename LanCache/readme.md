@@ -61,9 +61,9 @@ I installed LanCache on a VM that has a small “internal” storage and a large
 
 **Bonuses**
 
-I deployed a webui using this repo: [https://github.com/devedse/DeveLanCacheUI_Backend?tab=readme-ov-file#how-to-run-this]
-I added an entry in each AdGuardHome DNS Rewrite section to point "steam.cache.lancache.net" to my LanCache server so that both will resolve locally.
-I completed the tasks of setting up a timer and a service for each prefill (Steam, Epic, and BattleNet) as described on the wiki for each listed below.
+- I deployed a webui using this repo: [https://github.com/devedse/DeveLanCacheUI_Backend?tab=readme-ov-file#how-to-run-this]
+- I added an entry in each AdGuardHome DNS Rewrite section to point "steam.cache.lancache.net" to my LanCache server so that both will resolve locally.
+- I completed the tasks of setting up a timer and a service for each prefill (Steam, Epic, and BattleNet) as described on the wiki for each listed below.
 
 
 
