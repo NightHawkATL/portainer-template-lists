@@ -10,7 +10,7 @@ I installed LanCache on a VM that has a small “internal” storage and a large
   - *If you are running AdGuardHome in an LXC or VM and not in Docker, you can download and run the scripts there to make it easier to copy the scripts output files*
   - *If you are running AdGuardHome in Docker, you will have to get access to the folders and files needed to complete this (not within this scope as I do not have a Docker instance to test with*
   - *If you are running AdGuardHomeSync, it will not sync the files needed to complete the setup on 2 or more instances. You will have to do the steps listed below for each AdGuardHome server you are running*
-4. Locate the scripts folder and edit the config.json file to match the below:
+3. Locate the scripts folder and edit the config.json file to match the below:
 
 ![image](https://github.com/user-attachments/assets/1e40ac9b-cd64-4198-87ab-d12eb6fb4b3c)
 
