@@ -1,4 +1,4 @@
-# H1 **LanCache Setup for AdGuardHome w/Unbound**
+# **LanCache Setup for AdGuardHome w/Unbound**
 
 I installed LanCache on a VM that has a small “internal” storage and a large cache storage using a pair of 3TB drives in a mirror. I followed the basic steps to deploy LanCache using their script and configuring the .env file. Once deployed, I started working on adding everything to work with AdGuard.
 
