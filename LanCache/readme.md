@@ -12,7 +12,7 @@ I installed LanCache on a VM that has a small “internal” storage and a large
   - *If you are running AdGuardHomeSync, it will not sync the files needed to complete the setup on 2 or more instances. You will have to do the steps listed below for each AdGuardHome server you are running*
 4. Locate the scripts folder and edit the config.json file to match the below:
 
-`  {
+  {
       "combined_output": true,
       "ips": {
           "monolithic":   ["10.0.2.14"]
@@ -32,7 +32,7 @@ I installed LanCache on a VM that has a small “internal” storage and a large
           "wsus":         "monolithic",
           "xboxlive":     "monolithic"
       }
-  }  `
+  }
 
 4. Run the create-unbound.sh script for it to create a folder and file in the “/output/unbound” folder.
 5. Follow the directions to send the file to the unbound folder as shown in the CLI after it completes. Do this for each AdGuard server setup on the network.
@@ -41,7 +41,7 @@ I installed LanCache on a VM that has a small “internal” storage and a large
 8. Once that is done, you will need to verify that everything works on the computer or LAN.
   - First, you will want to “flush” your DNS cache. In windows it is “ipconfig /flushdns”.
   - Then, do an nslookup to lancache.steamcontent.com `nslookup lancache.steamcontent.com`.
-  - You should see a result where it locates the entry in your DNS (AdGuard) and then points to the LanCache server IP.
+  - You should see a result where it locates the entry in your DNS (AdGuardHome) and then points to the LanCache server IP.
     ![image](https://github.com/user-attachments/assets/0ccbeb5b-3fba-4ccc-a00a-3f96132218c7)
 
 
