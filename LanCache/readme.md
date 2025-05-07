@@ -1,6 +1,6 @@
 # **LanCache Setup for AdGuardHome w/Unbound**
 
-I installed LanCache on a VM that has a small “internal” storage and a large cache storage using a pair of 3TB drives in a mirror. I followed the basic steps to deploy LanCache using their script and configuring the .env file. Once deployed, I started working on adding everything to work with AdGuard. If you haven't worked with LanCache before, it will require good resources for it to run smoothly. I gave my LanCache server decent resources and it is using as much as I give it.
+I installed LanCache on an Ubuntu 22.04 VM that has a small “internal” storage and a large cache storage using an NFS share from my TrueNAS server to create a "disk" on Proxmox to store the downloads. I continue to try and find a good solution to get the network share to work on the system but permissions always get in the way. I might try linking the NFS share in `/etc/fstab` to see if I get better results and can access the files directly on any computer if needed. I followed the basic steps to deploy LanCache using their script and configuring the .env file. Once deployed, I started working on adding everything to work with AdGuard. If you haven't worked with LanCache before, it will require good resources for it to run smoothly. I gave my LanCache server decent resources and it is using as much as I give it.
 ![image](https://github.com/user-attachments/assets/bd0487ff-5e1b-4351-a6c1-9dbfa6d806bb)
 ![image](https://github.com/user-attachments/assets/df755e0c-afe8-4a38-8f7c-182a78e27ac5)
 ![image](https://github.com/user-attachments/assets/4ca38af1-7582-44f1-818f-f38673b4691a)
@@ -66,6 +66,7 @@ I installed LanCache on a VM that has a small “internal” storage and a large
   - You can install Portainer or Dockge to monitor LanCache containers and also to spin up the WebUI above.
 - I added an entry in each AdGuardHome DNS Rewrite section to point "steam.cache.lancache.net" to my LanCache server so that both will resolve locally.
 - I completed the tasks of setting up a timer and a service for each prefill (Steam, Epic, and BattleNet) as described on the wiki for each listed below.
+- I deployed Cockpit on the VM to manage the services and timers. I will see what other things I can use it for later. It can be installed with `sudo apt install cockpit` and then accessed with `https://{LANCACHE_IP}:9090`.
 
 ![image](https://github.com/user-attachments/assets/100f47a4-fd22-43f4-b510-09118916a380)
 
