@@ -12,27 +12,7 @@ I installed LanCache on a VM that has a small “internal” storage and a large
   - *If you are running AdGuardHomeSync, it will not sync the files needed to complete the setup on 2 or more instances. You will have to do the steps listed below for each AdGuardHome server you are running*
 4. Locate the scripts folder and edit the config.json file to match the below:
 
-  {
-      "combined_output": true,
-      "ips": {
-          "monolithic":   ["10.0.2.14"]
-      },
-      "cache_domains": {
-          "blizzard":     "monolithic",
-          "cod":          "monolithic",
-          "epicgames":    "monolithic",
-          "nintendo":     "monolithic",
-          "origin":       "monolithic",
-          "riot":         "monolithic",
-          "rockstar":     "monolithic",
-          "sony":         "monolithic",
-          "steam":        "monolithic",
-          "uplay":        "monolithic",
-          "warframe":     "monolithic",
-          "wsus":         "monolithic",
-          "xboxlive":     "monolithic"
-      }
-  }
+![image](https://github.com/user-attachments/assets/1e40ac9b-cd64-4198-87ab-d12eb6fb4b3c)
 
 4. Run the create-unbound.sh script for it to create a folder and file in the “/output/unbound” folder.
 5. Follow the directions to send the file to the unbound folder as shown in the CLI after it completes. Do this for each AdGuard server setup on the network.
