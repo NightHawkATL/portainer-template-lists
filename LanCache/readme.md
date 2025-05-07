@@ -5,7 +5,7 @@ I installed LanCache on a VM that has a small “internal” storage and a large
 ![image](https://github.com/user-attachments/assets/df755e0c-afe8-4a38-8f7c-182a78e27ac5)
 ![image](https://github.com/user-attachments/assets/4ca38af1-7582-44f1-818f-f38673b4691a)
 
-1. You will need to deploy the prefill if you want to pre-load the cache with games (chosse one or any combo you wish):
+1. You will need to deploy the prefill if you want to pre-load the cache with games. Chose one or any combo you wish:
   - [https://tpill90.github.io/steam-lancache-prefill/install-guides/Linux-Setup-Guide/]
   - [https://tpill90.github.io/epic-lancache-prefill/install-guides/Linux-Setup-Guide/]
   - [https://tpill90.github.io/battlenet-lancache-prefill/install-guides/Linux-Setup-Guide/]
@@ -33,7 +33,7 @@ I installed LanCache on a VM that has a small “internal” storage and a large
 
 
 
-**Bonuses**
+==**Bonuses**==
 
 I deployed a webui using this repo: [https://github.com/devedse/DeveLanCacheUI_Backend?tab=readme-ov-file#how-to-run-this](https://github.com/devedse/DeveLanCacheUI_Backend?tab=readme-ov-file#how-to-run-this)
 I added an entry in each AdGuardHome DNS Rewrite section to point "steam.cache.lancache.net" to my LanCache server so that both will resolve locally.
@@ -41,7 +41,7 @@ I completed the tasks of setting up a timer and a service for each prefill (Stea
 
 
 
-**Resources used:**
+==**Resources used:**==
 
 [https://lancache.net/docs/useful-commands/](https://lancache.net/docs/useful-commands/)
 
