@@ -65,7 +65,7 @@ I installed LanCache on a VM that has a small “internal” storage and a large
 - I added an entry in each AdGuardHome DNS Rewrite section to point "steam.cache.lancache.net" to my LanCache server so that both will resolve locally.
 - I completed the tasks of setting up a timer and a service for each prefill (Steam, Epic, and BattleNet) as described on the wiki for each listed below.
 
-
+![image](https://github.com/user-attachments/assets/100f47a4-fd22-43f4-b510-09118916a380)
 
 **Resources used**
 
