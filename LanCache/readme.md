@@ -1,6 +1,9 @@
 # **LanCache Setup for AdGuardHome w/Unbound**
 
-I installed LanCache on a VM that has a small “internal” storage and a large cache storage using a pair of 3TB drives in a mirror. I followed the basic steps to deploy LanCache using their script and configuring the .env file. Once deployed, I started working on adding everything to work with AdGuard.
+I installed LanCache on a VM that has a small “internal” storage and a large cache storage using a pair of 3TB drives in a mirror. I followed the basic steps to deploy LanCache using their script and configuring the .env file. Once deployed, I started working on adding everything to work with AdGuard. If you haven't worked with LanCache before, it will require good resources for it to run smoothly. I gave my LanCache server decent resources and it is using as much as I give it.
+![image](https://github.com/user-attachments/assets/bd0487ff-5e1b-4351-a6c1-9dbfa6d806bb)
+![image](https://github.com/user-attachments/assets/df755e0c-afe8-4a38-8f7c-182a78e27ac5)
+![image](https://github.com/user-attachments/assets/4ca38af1-7582-44f1-818f-f38673b4691a)
 
 1. You will need to deploy the prefill if you want to pre-load the cache with games:
   - [https://tpill90.github.io/steam-lancache-prefill/install-guides/Linux-Setup-Guide/]
