@@ -42,7 +42,8 @@ I installed LanCache on a VM that has a small “internal” storage and a large
   - First, you will want to “flush” your DNS cache. In windows it is “ipconfig /flushdns”.
   - Then, do an nslookup to lancache.steamcontent.com `nslookup lancache.steamcontent.com`.
   - You should see a result where it locates the entry in your DNS (AdGuard) and then points to the LanCache server IP.
-    ![image](https://github.com/user-attachments/assets/b330d97f-3e10-4aa5-a286-45cf8f2e3125)
+    ![image](https://github.com/user-attachments/assets/0ccbeb5b-3fba-4ccc-a00a-3f96132218c7)
+
 
 9. Run a prefill test to verify that it can successfully connect to the Steam server. If you are using other prefill scripts for other services, you will need to or want to test those as well.
 10. Once you have verified that LanCache is working with AdGuard, you can start downloading and caching games and Windows updates.
