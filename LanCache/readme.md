@@ -53,6 +53,8 @@ I installed LanCache on a VM that has a small “internal” storage and a large
 
 
 9. Run a prefill test to verify that it can successfully connect to the Steam server. If you are using other prefill scripts for other services, you will need to or want to test those as well.
+  ![image](https://github.com/user-attachments/assets/c2aafec2-f32b-49af-9505-a187f820550f)
+
 10. Once you have verified that LanCache is working with AdGuard, you can start downloading and caching games and Windows updates.
 
 
