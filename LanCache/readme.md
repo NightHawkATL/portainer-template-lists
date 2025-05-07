@@ -5,7 +5,7 @@ I installed LanCache on a VM that has a small “internal” storage and a large
 ![image](https://github.com/user-attachments/assets/df755e0c-afe8-4a38-8f7c-182a78e27ac5)
 ![image](https://github.com/user-attachments/assets/4ca38af1-7582-44f1-818f-f38673b4691a)
 
-1. You will need to deploy the prefill if you want to pre-load the cache with games:
+1. You will need to deploy the prefill if you want to pre-load the cache with games (chosse one or any combo you wish):
   - [https://tpill90.github.io/steam-lancache-prefill/install-guides/Linux-Setup-Guide/]
   - [https://tpill90.github.io/epic-lancache-prefill/install-guides/Linux-Setup-Guide/]
   - [https://tpill90.github.io/battlenet-lancache-prefill/install-guides/Linux-Setup-Guide/]
