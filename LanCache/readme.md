@@ -7,32 +7,32 @@ I installed LanCache on a VM that has a small “internal” storage and a large
   - [https://tpill90.github.io/epic-lancache-prefill/install-guides/Linux-Setup-Guide/]
   - [https://tpill90.github.io/battlenet-lancache-prefill/install-guides/Linux-Setup-Guide/]
 2. Download and configure the cache-domains setup from [https://github.com/uklans/cache-domains/tree/master/scripts] and follow thier instructions to get started. I customized mine a little as shown below.
-  - * If you are running AdGuardHome in an LXC or VM and not in Docker, you can download and run the scripts there to make it easier to copy the scripts output files*
-  - * If you are running AdGuardHome in Docker, you will have to get access to the folders and files needed to complete this (not within this scope as I do not have a Docker instance to test with*
-  - * If you are running AdGuardHomeSync, it will not sync the files needed to complete the setup on 2 or more instances. You will have to do the steps listed below for each AdGuardHome server you are running*
+  - *If you are running AdGuardHome in an LXC or VM and not in Docker, you can download and run the scripts there to make it easier to copy the scripts output files*
+  - *If you are running AdGuardHome in Docker, you will have to get access to the folders and files needed to complete this (not within this scope as I do not have a Docker instance to test with*
+  - *If you are running AdGuardHomeSync, it will not sync the files needed to complete the setup on 2 or more instances. You will have to do the steps listed below for each AdGuardHome server you are running*
 4. Locate the scripts folder and edit the config.json file to match the below:
 
-`{
-    "combined_output": true,
-    "ips": {
-        "monolithic":   ["10.0.2.14"]
-    },
-    "cache_domains": {
-        "blizzard":     "monolithic",
-        "cod":          "monolithic",
-        "epicgames":    "monolithic",
-        "nintendo":     "monolithic",
-        "origin":       "monolithic",
-        "riot":         "monolithic",
-        "rockstar":     "monolithic",
-        "sony":         "monolithic",
-        "steam":        "monolithic",
-        "uplay":        "monolithic",
-        "warframe":     "monolithic",
-        "wsus":         "monolithic",
-        "xboxlive":     "monolithic"
-    }
-}`
+`  {
+      "combined_output": true,
+      "ips": {
+          "monolithic":   ["10.0.2.14"]
+      },
+      "cache_domains": {
+          "blizzard":     "monolithic",
+          "cod":          "monolithic",
+          "epicgames":    "monolithic",
+          "nintendo":     "monolithic",
+          "origin":       "monolithic",
+          "riot":         "monolithic",
+          "rockstar":     "monolithic",
+          "sony":         "monolithic",
+          "steam":        "monolithic",
+          "uplay":        "monolithic",
+          "warframe":     "monolithic",
+          "wsus":         "monolithic",
+          "xboxlive":     "monolithic"
+      }
+  }  `
 
 4. Run the create-unbound.sh script for it to create a folder and file in the “/output/unbound” folder.
 5. Follow the directions to send the file to the unbound folder as shown in the CLI after it completes. Do this for each AdGuard server setup on the network.
