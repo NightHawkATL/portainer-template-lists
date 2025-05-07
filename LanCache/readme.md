@@ -3,9 +3,9 @@
 I installed LanCache on a VM that has a small “internal” storage and a large cache storage using a pair of 3TB drives in a mirror. I followed the basic steps to deploy LanCache using their script and configuring the .env file. Once deployed, I started working on adding everything to work with AdGuard.
 
 1. You will need to deploy the prefill if you want to pre-load the cache with games:
-  a. [https://tpill90.github.io/steam-lancache-prefill/install-guides/Linux-Setup-Guide/]
-  b. [https://tpill90.github.io/epic-lancache-prefill/install-guides/Linux-Setup-Guide/]
-  c. [https://tpill90.github.io/battlenet-lancache-prefill/install-guides/Linux-Setup-Guide/]
+  1. [https://tpill90.github.io/steam-lancache-prefill/install-guides/Linux-Setup-Guide/]
+  2. [https://tpill90.github.io/epic-lancache-prefill/install-guides/Linux-Setup-Guide/]
+  3. [https://tpill90.github.io/battlenet-lancache-prefill/install-guides/Linux-Setup-Guide/]
 2. Download and configure the cache-domains setup from [https://github.com/uklans/cache-domains/tree/master/scripts] and follow thier instructions to get started. I customized mine a little as shown below.
    *a. If you are running AdGuardHome in an LXC or VM and not in Docker, you can download and run the scripts there to make it easier to copy the scripts output files*
    *b. If you are running AdGuardHome in Docker, you will have to get access to the folders and files needed to complete this (not within this scope as I do not have a Docker instance to test with*
