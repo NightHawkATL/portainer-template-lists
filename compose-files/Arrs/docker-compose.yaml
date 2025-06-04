@@ -151,10 +151,15 @@ services:
       - 8080:8080
     restart: unless-stopped
 
+# Uncomment the below lines if you wish to use a VPN to route everything through.
+# I have had mixed results with this setup but as long as everything is in the same stack, it should work.
+# You will need a VPN service that is not self-hosted and must match one of the approved setups on the Gluetun list and follow the correct steps to connect it correctly.
+# https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers
+
 #  gluetun:
 #    image: qmcgaw/gluetun
 #    container_name: vpn-gluetun
-    # line above must be uncommented to allow external containers to connect. See https://github.com/qdm12/gluetun/wiki/Connect-a-container-to-gluetun#external-container-to-gluetun
+    # line above must be uncommented to allow external containers to connect. See https://github.com/qdm12/gluetun-wiki
 #    cap_add:
 #      - NET_ADMIN
 #    devices:
