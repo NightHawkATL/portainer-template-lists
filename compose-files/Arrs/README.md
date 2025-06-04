@@ -16,10 +16,10 @@ Within each "Arr" app, you will need to add a connection for SAB following the s
 
 
 ## Connecting Media & Plex/Jellyfin/Emby in the Arrs
-  1. Under Settings > Media Management, you will need to point to the ("${NET_SHARE}") location provided in the stack and conencted to the container via the host OS.
+  1. Under Settings > Media Management, you will need to point to the ("${NET_SHARE}") location provided in the stack and conencted to the container via the host OS. 
 ![image](https://github.com/NightHawkATL/portainer-template-lists/assets/8395658/78103b0e-f597-46f3-affe-ab233865a30a)
 
-  2.  In Settings > Connect, click the plus (+) button and choose the connections you want to add. I would suggest at least the main service (Plex/Jellyfin/Emby) but there are also others that you can choose from. Just follow the directions that are porvided within each to make the connections active.
+  3.  In Settings > Connect, click the plus (+) button and choose the connections you want to add. I would suggest at least the main service (Plex/Jellyfin/Emby) but there are also others that you can choose from. Just follow the directions that are porvided within each to make the connections active.
 ![image](https://github.com/NightHawkATL/portainer-template-lists/assets/8395658/1e2b4882-3e41-49c9-9790-466aa5d48899)
 
 
