@@ -65,17 +65,17 @@ services:
     depends_on:
       - ollama
 
-    ollama-up:
-      image: curlimages/curl
-      container_name: ollama-up
-      command: sleep inf
-      healthcheck:
-        test: curl ollama:11434
-        interval: 5s
-        start_period: 5s
-      restart: on-failure
-      depends_on:
-        - ollama
+  ollama-up:
+    image: curlimages/curl
+    container_name: ollama-up
+    command: sleep inf
+    healthcheck:
+      test: curl ollama:11434
+      interval: 5s
+      start_period: 5s
+    restart: on-failure
+    depends_on:
+      - ollama
 
 volumes:
   ollama: {}
