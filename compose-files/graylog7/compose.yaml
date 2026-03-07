@@ -4,7 +4,7 @@
 services:
   # MongoDB: https://hub.docker.com/_/mongo/
   mongodb:
-    image: mongo:${MONGO_VER}
+    image: mongo:${MONGO_VER:-7.0}
     restart: unless-stopped
     networks:
       - graylog
@@ -13,18 +13,17 @@ services:
       - /mnt/Apps/Storage/graylog/mongodb/config:/data/configdb
 
   # For DataNode setup, graylog starts with a preflight UI, this is a change from just using OpenSearch/Elasticsearch.
-  # Please take a look at the README at the top of this repo or the regular docs for more info.
   # Graylog Data Node: https://hub.docker.com/r/graylog/graylog-datanode
 
   datanode:
-    image: graylog/graylog-datanode:${DN_VER}
+    image: graylog/graylog-datanode:${DN_VER:-7.0} ### version must match with the graylog server version
     hostname: "datanode"
     environment:
       GRAYLOG_DATANODE_NODE_ID_FILE: "/var/lib/graylog-datanode/node-id"
-      # GRAYLOG_DATANODE_PASSWORD_SECRET and GRAYLOG_PASSWORD_SECRET MUST be the same value
+      #### GRAYLOG_DATANODE_PASSWORD_SECRET and GRAYLOG_PASSWORD_SECRET MUST be the same value
       GRAYLOG_DATANODE_PASSWORD_SECRET: ${GRAYLOG_PASSWORD_SECRET}
       GRAYLOG_DATANODE_MONGODB_URI: "mongodb://mongodb:27017/graylog"
-      GRAYLOG_DATANODE_OPENSEARCH_HEAP: "8g" # Should be set to half of available system memory
+      GRAYLOG_DATANODE_OPENSEARCH_HEAP: "8g" #### Should be set to half of available system/docker memory
     ulimits:
       memlock:
         hard: -1
@@ -47,7 +46,7 @@ services:
   graylog:
     container_name: graylog
     hostname: "server"
-    image: graylog/graylog:${GL_VER}
+    image: graylog/graylog:${GL_VER:-7.0}
     depends_on:
       mongodb:
         condition: "service_started"
@@ -87,9 +86,11 @@ services:
     networks:
       - graylog
     volumes:
-      # IMPORTANT: bind mounts (e.g., "./data:/usr/share/graylog/data") currently
-      # don't work correctly. You have to use volume mounts.
-      # See: https://github.com/Graylog2/docker-compose/issues/99#issuecomment-3800898829
+      #####################################################################################
+      # IMPORTANT: bind mounts (e.g., "./data:/usr/share/graylog/data") currently         #
+      # don't work correctly. You have to use volume mounts.                              #
+      # See: https://github.com/Graylog2/docker-compose/issues/99#issuecomment-3800898829 #
+      #####################################################################################
       - graylog_data:/usr/share/graylog/data
       - /mnt/Apps/Storage/graylog/maxmind:/etc/server
     restart: unless-stopped
