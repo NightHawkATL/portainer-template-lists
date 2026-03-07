@@ -1,0 +1,105 @@
+# For DataNode setup, graylog starts with a preflight UI, this is a change from just using OpenSearch/Elasticsearch.
+# Please take a look at the README at the top of this repo or the regular docs for more info.
+
+services:
+  # MongoDB: https://hub.docker.com/_/mongo/
+  mongodb:
+    image: mongo:${MONGO_VER}
+    restart: unless-stopped
+    networks:
+      - graylog
+    volumes:
+      - /mnt/Apps/Storage/graylog/mongodb/data:/data/db
+      - /mnt/Apps/Storage/graylog/mongodb/config:/data/configdb
+
+  # For DataNode setup, graylog starts with a preflight UI, this is a change from just using OpenSearch/Elasticsearch.
+  # Please take a look at the README at the top of this repo or the regular docs for more info.
+  # Graylog Data Node: https://hub.docker.com/r/graylog/graylog-datanode
+
+  datanode:
+    image: graylog/graylog-datanode:${DN_VER}
+    hostname: "datanode"
+    environment:
+      GRAYLOG_DATANODE_NODE_ID_FILE: "/var/lib/graylog-datanode/node-id"
+      # GRAYLOG_DATANODE_PASSWORD_SECRET and GRAYLOG_PASSWORD_SECRET MUST be the same value
+      GRAYLOG_DATANODE_PASSWORD_SECRET: ${GRAYLOG_PASSWORD_SECRET}
+      GRAYLOG_DATANODE_MONGODB_URI: "mongodb://mongodb:27017/graylog"
+      GRAYLOG_DATANODE_OPENSEARCH_HEAP: "8g" # Should be set to half of available system memory
+    ulimits:
+      memlock:
+        hard: -1
+        soft: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - 8999:8999   # DataNode API
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - graylog  
+    volumes:
+      # - /mnt/Apps/Storage/graylog/datanode:/var/lib/graylog-datanode
+      - /mnt/drive2/datanode:/var/lib/graylog-datanode
+    restart: unless-stopped
+
+  # Graylog: https://hub.docker.com/r/graylog/graylog-enterprise
+  graylog:
+    container_name: graylog
+    hostname: "server"
+    image: graylog/graylog:${GL_VER}
+    depends_on:
+      mongodb:
+        condition: "service_started"
+      datanode:
+        condition: "service_started"
+    entrypoint: "/usr/bin/tini --  /docker-entrypoint.sh"
+    environment:
+      GRAYLOG_NODE_ID_FILE: "/usr/share/graylog/data/data/node-id"
+      # GRAYLOG_DATANODE_PASSWORD_SECRET and GRAYLOG_PASSWORD_SECRET MUST be the same value
+      GRAYLOG_PASSWORD_SECRET: ${GRAYLOG_PASSWORD_SECRET}
+      GRAYLOG_ROOT_PASSWORD_SHA2: ${GRAYLOG_ROOT_PASSWORD_SHA2}
+      GRAYLOG_HTTP_BIND_ADDRESS: "0.0.0.0:9000"
+      GRAYLOG_HTTP_EXTERNAL_URI: "http://0.0.0.0:9000/"
+      GRAYLOG_MONGODB_URI: "mongodb://mongodb:27017/graylog"
+    ports:
+      - 9000:9000/tcp   # Graylog web interface and REST API
+      - 1514:1514/udp   # Syslog - 
+      - 1516:1516/udp   # Syslog - 
+      - 1518:1518/udp   # Syslog -
+      - 1520:1520/udp   # Syslog - 
+      - 1522:1522/udp   # Syslog - 
+      - 1524:1524/udp   # Syslog - 
+      - 1526:1526/udp   # Syslog - 
+      - 1528:1528/udp   # Syslog - 
+      - 1530:1530/udp   # Syslog - 
+      - 1532:1532/udp   # Syslog - 
+      - 1542:1542/udp   # Syslog - 
+      - 1544:1544/udp   # Syslog - 
+      - 1546:1546/udp   # Syslog - 
+      - 1548:1548/udp   # Syslog - 
+      - 1550:1550/udp   # Syslog - 
+      - 1552:1552/udp   # Syslog - 
+      - 1554:1554/udp   # Syslog -
+      - 1556:1556/udp   # Syslog - 
+      - 1558:1558/udp   # Syslog - 
+      - 1560:1560/udp   # Syslog - 
+    networks:
+      - graylog
+    volumes:
+      # IMPORTANT: bind mounts (e.g., "./data:/usr/share/graylog/data") currently
+      # don't work correctly. You have to use volume mounts.
+      # See: https://github.com/Graylog2/docker-compose/issues/99#issuecomment-3800898829
+      - graylog_data:/usr/share/graylog/data
+      - /mnt/Apps/Storage/graylog/maxmind:/etc/server
+    restart: unless-stopped
+
+networks:
+  graylog:
+    driver: "bridge"
+
+volumes:
+  # mongodb_data:
+  # mongodb_config:
+  # graylog-datanode:
+  graylog_data:
