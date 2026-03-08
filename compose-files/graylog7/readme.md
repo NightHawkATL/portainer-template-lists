@@ -26,7 +26,10 @@ If the server/service/device that you wish to add to Graylog does not have an op
 1. `sudo apt update`
 2. `sudo apt install rsyslog`
 3. Open the rsyslog.conf file with `sudo nano /etc/rsyslog.conf`.
-4. Add `*.* @{graylog_server_ip}:{port}` to track all logs. Putting each device on its own port will allow you to more easily track and connect to different streams easier. 
+4. Add `*.* @{graylog_server_ip}:{port}` to track all logs. Putting each device on its own port will allow you to more easily track and connect to different streams easier.
+  "*.*" means to send everything from the server to Graylog. To fine-tune this, please refer to the manpage for rsyslog.
+  One "@" signifies UDP and two "@@" signifies TCP.
+  The IP:Port needs to be entered without the braces, ex. > `*.* @192.168.25.50:1514` 
 
 ##############################################################################
 
