@@ -20,12 +20,14 @@ You can check the current timezone by using `timedatectl` at the command-line pr
 5. Deploy the Graylog application with Docker Compose
 
 ##############################################################################
+
 If the server/service/device that you wish to add to Graylog does not have an option to directly connect to a syslog server, you will need to take action to install rsyslog (linux) and configure it to send the logs over to Graylog.
 
 1. `sudo apt update`
 2. `sudo apt install rsyslog`
 3. Open the rsyslog.conf file with `sudo nano /etc/rsyslog.conf`.
 4. Add `*.* @{graylog_server_ip}:{port}` to track all logs. Putting each device on its own port will allow you to more easily track and connect to different streams easier. 
+
 ##############################################################################
 
 The initial username is admin and the password will be provided in the container logs. You will need to login and start the "pre-flight" steps. The step where you are setting up a cert for the datanode will take some time. Just wait for the indicatoir to show a green label for the instance. Once complete, you will need to sign-in with the username admin and the password that matches the one you used to setup the SHA2 in the .env file. 
