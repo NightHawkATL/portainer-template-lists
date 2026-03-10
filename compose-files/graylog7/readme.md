@@ -21,7 +21,7 @@ You can check the current timezone by using `timedatectl` at the command-line pr
 
 ##############################################################################
 
-If the server/service/device that you wish to add to Graylog does not have an option to directly connect to a syslog server, you will need to take action to install rsyslog (linux) and configure it to send the logs over to Graylog.
+If the server/service/device that you wish to add to Graylog does not have an option to directly connect to a syslog server, you will need to take action to install rsyslog (linux) and configure it to send the logs over to Graylog. This will connect each "client" to Graylog so there is only a need to add the rsyslog.conf entry once per "server".
 
 1. `sudo apt update`
 2. `sudo apt install rsyslog`
