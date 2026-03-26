@@ -31,7 +31,7 @@ services:
     environment:
       - PUID=${PUID} # typically "1000" but could be different depending on your user on the host OS for Docker
       - PGID=${PGID} # typically "1000" but could be different depending on your user on the host OS for Docker
-      - TZ=${TZ # typical representation of time zone (America/New_York) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+      - TZ=${TZ} # typical representation of time zone (America/New_York) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
     volumes:
       - ${STORAGE_FOLDER_LOCATION}/radarr:/config # example location would be "/home/[user]/docker (no trailing slash)
       - /etc/localtime:/etc/localtime:ro
